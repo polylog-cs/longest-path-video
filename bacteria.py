@@ -5,6 +5,7 @@ from scipy.optimize import linprog
 
 import solarized
 import tree_data
+from util import Tree
 
 
 def parse_bacteria_tree():
@@ -89,149 +90,6 @@ def parse_tree_tree():
     return range(len(positions)), edges, positions
 
 
-def get_adjacency_list(g):
-    adj = dict([(v, []) for v in g.vertices])
-    for v1, v2 in g.edges:
-        adj[v1].append(v2)
-        adj[v2].append(v1)
-
-    return adj
-
-
-def bfs(g: Graph, start):
-    adj = get_adjacency_list(g)
-
-    res_vertices = [[start]]
-    res_edges = [[]]
-    res_parents = {start: None}
-    seen = set([start])
-
-    while True:
-        cur_vertices = []
-        cur_edges = []
-
-        for v1 in res_vertices[-1]:
-            for v2 in adj[v1]:
-                if v2 not in seen:
-                    cur_vertices.append(v2)
-                    seen.add(v2)
-                    cur_edges.append((v1, v2))
-                    res_parents[v2] = v1
-
-        if cur_vertices:
-            res_vertices.append(cur_vertices)
-            res_edges.append(cur_edges)
-        else:
-            break
-
-    return res_vertices, res_edges, res_parents
-
-
-def get_path(g: Graph, start, end):
-    _, _, parents = bfs(g, end)
-    path = [start]
-
-    while path[-1] != end:
-        path.append(parents[path[-1]])
-
-    return path
-
-
-def hanging_position(g: Graph, start, end, shift=(0.0, 0.0, 0.0), Delta=0.3, scale=0.5):
-    positions = {}
-    top = get_path(g, start, end)
-
-    adj = get_adjacency_list(g)
-    weights = {}
-    level_order = {}
-    pi = {}
-    parent = {}
-    i = 0
-    for u in g.vertices:
-        pi[u] = i
-        i = i + 1
-
-    def weight(v, parents, depth):
-        w = 1
-        for v2 in adj[v]:
-            if v2 not in parents:
-                w += weight(v2, [v], depth + 1)
-        weights[v] = w
-        if depth > 0:
-            parent[v] = parents[0]
-            positions[v] = np.array([0.0, -depth, 0])
-            if not depth in level_order:
-                level_order[depth] = []
-            level_order[depth].append(v)
-        return w
-
-    for i, v1 in enumerate(top):
-        positions[v1] = np.array([i * 1.0 - len(top) / 2.0 + 0.5, 0.0, 0.0])
-        weight(v1, top, 0)
-
-    # LP
-    # variably:    n* x_i ... pozice na x-ove ose
-    #              n* c_i ... rozdil na x-ove ose me a meho otce
-    #              vektor promennych je konkatenace x_i a c_i
-    # constrainty: pro rooty je x_i = jejich pozice
-    #              jinak kdyz x_i a x_j vedle sebe tak x_j > x_i + Delta
-    #              a nakonec c_i >= |x_i - x_p(i)|
-    # MIN sum w_i * c_i kde w_i je velikost podstromu
-
-    n = len(g.vertices)
-    num_var = 2 * n
-
-    A = []
-    b = []
-    c = np.zeros(num_var)
-
-    for u in g.vertices:
-        if u in top:  # je-li to root tak x_i = současná pozice i
-            l = np.zeros(num_var)
-            l[pi[u]] = 1
-            A.append(l)
-            A.append(-l)
-            b.append(positions[u][0])
-            b.append(-positions[u][0])
-        else:  # jinak c_i >= |x_i - x_p(i)|
-            c[n + pi[u]] = weights[u]
-            l = np.zeros(num_var)
-            l[pi[u]] = 1
-            l[pi[parent[u]]] = -1
-            l[n + pi[u]] = -1
-            A.append(l)
-            l = -l
-            l[n + pi[u]] = -1
-            A.append(l)
-            b.append(0)
-            b.append(0)
-
-    for i in level_order:
-        lev = level_order[i]
-        for i in range(1, len(lev)):  # pro ty vedle plati x_j > x_i + Delta
-            l = np.zeros(num_var)
-            l[pi[lev[i]]] = -1
-            l[pi[lev[i - 1]]] = 1
-
-            A.append(l)
-            b.append(-Delta)
-
-    constraints = []
-    for i in range(num_var):
-        constraints.append((None, None))
-
-    res = linprog(c, A_ub=A, b_ub=b, bounds=constraints)
-
-    for u in g.vertices:
-        positions[u][0] = 1.0 * res.x[pi[u]]
-
-    for k in positions:
-        positions[k] *= scale
-        positions[k] += shift
-
-    return positions
-
-
 class Intro(Scene):
     def construct(self):
         erdos = ImageMobject("img/erdos.jpg")
@@ -286,10 +144,7 @@ class DefiniceStromu(Scene):
 
 class KutaleciStrom(Scene):
     def construct(self):
-        self.g = Graph(tree_data.example_vertices, tree_data.example_edges)
-        sh = (-2, 3, 0)
-        hanging1 = hanging_position(self.g, 4, 4, shift=sh)
-        self.g = Graph(
+        g = Tree(
             tree_data.example_vertices,
             tree_data.example_edges,
             layout="kamada_kawai",
@@ -299,50 +154,31 @@ class KutaleciStrom(Scene):
             edge_config={"color": solarized.BASE00},
         )
 
-        self.play(Create(self.g))
+        hanging1 = g.hanging_position(4, 4, shift=(-4, 3, 0))
+
+        self.play(Create(g))
         self.wait(1)
 
-        delta = (-2.0, 0.0, 0.0)
-        for k, v in hanging1.items():
-            v += delta
-
-        self.play(self.g.animate.change_layout(hanging1))
+        self.play(g.animate.change_layout(hanging1))
         self.wait(1)
 
-        hanging2 = hanging_position(self.g, 4, 9, shift=sh)
-        delta = hanging1[4] - hanging2[4]
-        for k, v in hanging2.items():
-            v += delta
-
-        self.play(self.g.animate.change_layout(hanging2))
-
+        hanging2 = g.hanging_position(4, 9, pinned_vertex=4)
+        self.play(g.animate.change_layout(hanging2))
         self.wait(1)
 
-        hanging3 = hanging_position(self.g, 9, 9)
-        delta = hanging2[9] - hanging3[9]
-        for k, v in hanging3.items():
-            v += delta
-
-        self.play(self.g.animate.change_layout(hanging3))
-
+        hanging3 = g.hanging_position(9, 9, pinned_vertex=9)
+        self.play(g.animate.change_layout(hanging3))
         self.wait(1)
 
-        hanging4 = hanging_position(self.g, 9, 0)
-        delta = hanging3[9] - hanging4[9]
-        for k, v in hanging4.items():
-            v += delta
-
-        self.play(self.g.animate.change_layout(hanging4))
-
-        self.wait(1)
-
+        hanging4 = g.hanging_position(9, 0, pinned_vertex=9)
+        self.play(g.animate.change_layout(hanging4))
         self.wait(1)
 
 
-class LongestPath(Scene):
+class Triangle(Scene):
     def construct(self):
 
-        self.g = Graph(
+        g = Tree(
             tree_data.example_vertices,
             tree_data.example_edges,
             layout="kamada_kawai",
@@ -351,14 +187,12 @@ class LongestPath(Scene):
             edge_config={"color": solarized.BASE00},
         )
 
-        self.play(Create(self.g))
-
+        self.play(Create(g))
         self.wait(1)
 
         sh = (0, 1, 0)
-        hanging1 = hanging_position(self.g, 0, 9, shift=sh)
-
-        self.play(self.g.animate.change_layout(hanging1))
+        hanging1 = g.hanging_position(0, 9, shift=sh)
+        self.play(g.animate.change_layout(hanging1))
 
         self.wait(1)
 
@@ -367,33 +201,26 @@ class LongestPath(Scene):
         tmid = (tleft + tright) / 2.0
         tbot = tmid - [(tmid - tleft)[1], (tmid - tleft)[0], 0]
 
-        ltop = Line(tleft, tright)
+        ltop = Line(tright, tleft)
         lleft = Line(tleft, tbot)
         lright = Line(tbot, tright)
-        self.add(ltop)
-        self.add(lleft)
-        self.add(lright)
-
+        self.play(Create(ltop), Create(lleft), Create(lright), time=2)
         self.wait(1)
 
-        self.remove(ltop, lleft, lright)
-
+        self.play(Uncreate(ltop), Uncreate(lleft), Uncreate(lright), time=2)
         self.wait(1)
 
-        self.play(
-            self.g.animate.change_layout(hanging_position(self.g, 44, 65, shift=sh))
-        )
+        self.play(g.animate.change_layout(g.hanging_position(44, 65, shift=sh)))
 
         self.wait(1)
 
 
 class Bacteria(Scene):
     def construct(self):
-
         vertices, edges, positions, a, b, leaves = parse_bacteria_tree()
         vconfig = {"color": solarized.BASE00}
 
-        self.g = Graph(
+        g = Tree(
             vertices,
             edges,
             layout=positions,  # "kamada_kawai",
@@ -401,29 +228,16 @@ class Bacteria(Scene):
             edge_config={"color": solarized.BASE00},
         )
 
-        longest = get_path(self.g, a, b)
+        longest = g.get_path(a, b)
 
-        for u in longest:
-            vconfig[u] = {"fill_color": RED}
-        for u in leaves:
-            vconfig[u] = {"fill_color": GREEN}
 
-        self.play(Create(self.g))
-
+        self.play(Create(g))
         self.wait(1)
 
-        self.remove(self.g)
+        self.play(g.animate.set_path_color(a, b))
+        self.play(g.animate.set_colors(dict((v, solarized.GREEN) for v in leaves)))
+        self.wait(1)
 
-        self.g = Graph(
-            vertices,
-            edges,
-            layout=positions,  # "kamada_kawai",
-            layout_scale=4.0,
-            # labels = True,
-            vertex_config=vconfig,
-            edge_config={"color": solarized.BASE00},
-        )
-
-        self.play(self.g.animate.change_layout("kamada_kawai"))
+        self.play(g.animate.change_layout("kamada_kawai"))
 
         self.wait(1)
