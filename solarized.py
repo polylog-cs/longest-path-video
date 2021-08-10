@@ -25,3 +25,7 @@ VIOLET = "#6c71c4"
 BLUE = "#268bd2"
 CYAN = "#2aa198"
 GREEN = "#859900"
+
+from manim import config
+
+config.background_color = BASE2

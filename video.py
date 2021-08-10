@@ -107,8 +107,6 @@ def hanging_position(g: Graph, start, end, shift=None):
     return positions
 
 
-config.background_color = solarized.BASE2
-
 
 class LongestPath(Scene):
     # CONFIG = {"camera_config": {"background_color": solarized.BASE2}}
