@@ -1,0 +1,519 @@
+/
+/Applications
+/Applications/Ableton\ Live\ 10\ Standard.app
+/Applications/Adobe\ Acrobat\ Reader\ DC.app
+/Applications/Android\ File\ Transfer.app
+/Applications/Audacity.app
+/Applications/Cisco
+/Applications/DBeaver.app
+/Applications/Discord.app
+/Applications/DjView.app
+/Applications/Firefox.app
+/Applications/GIMP-2.10.app
+/Applications/Google\ Chrome.app
+/Applications/Keynote.app
+/Applications/LogMeIn\ Hamachi
+/Applications/Magnet.app
+/Applications/Melodyne\ 5
+/Applications/Messenger.app
+/Applications/Minecraft.app
+/Applications/Notability.app
+/Applications/Numbers.app
+/Applications/OpenVPN\ Connect
+/Applications/Pages.app
+/Applications/PyCharm.app
+/Applications/Safari.app
+/Applications/Signal.app
+/Applications/Skim.app
+/Applications/Slack.app
+/Applications/Spotify.app
+/Applications/Steam.app
+/Applications/SteelSeries\ ExactMouse\ Tool.app
+/Applications/Sublime\ Text.app
+/Applications/SyphonInject.app
+/Applications/TeX
+/Applications/The\ Unarchiver.app
+/Applications/Turbo\ Boost\ Switcher.app
+/Applications/Unshaky.app
+/Applications/Utilities
+/Applications/VLC.app
+/Applications/Visual\ Studio\ Code.app
+/Applications/Wacom\ Tablet.localized
+/Applications/XLN\ Audio
+/Applications/XLN\ Online\ Installer.app
+/Applications/Yamaha\ Steinberg\ USB\ Control\ Panel.app
+/Applications/Zotero.app
+/Applications/google-cloud-sdk
+/Applications/google-cloud-sdk.staging
+/Applications/iTerm.app
+/Applications/tbswitcher_resources
+/Applications/zoom.us.app
+/Library
+/Library/Apple
+/Library/Application\ Support
+/Library/Audio
+/Library/Caches
+/Library/Catacomb
+/Library/ColorPickers
+/Library/ColorSync
+/Library/Components
+/Library/Compositions
+/Library/Contextual\ Menu\ Items
+/Library/CoreAnalytics
+/Library/CoreMediaIO
+/Library/Desktop\ Pictures
+/Library/Developer
+/Library/DirectoryServices
+/Library/Documentation
+/Library/DriverExtensions
+/Library/Extensions
+/Library/Filesystems
+/Library/Fonts
+/Library/Frameworks
+/Library/GPUBundles
+/Library/Google
+/Library/Graphics
+/Library/Image\ Capture
+/Library/Input\ Methods
+/Library/InstallerSandboxes
+/Library/Internet\ Plug-Ins
+/Library/Java
+/Library/Keyboard\ Layouts
+/Library/Keychains
+/Library/LaunchAgents
+/Library/LaunchDaemons
+/Library/Logs
+/Library/Modem\ Scripts
+/Library/OSAnalytics
+/Library/OpenDirectory
+/Library/Perl
+/Library/PreferencePanes
+/Library/Preferences
+/Library/Printers
+/Library/PrivilegedHelperTools
+/Library/Python
+/Library/QuickLook
+/Library/QuickTime
+/Library/Receipts
+/Library/Ruby
+/Library/Sandbox
+/Library/Screen\ Savers
+/Library/ScriptingAdditions
+/Library/Scripts
+/Library/Security
+/Library/Speech
+/Library/Spelling
+/Library/Spotlight
+/Library/StagedDriverExtensions
+/Library/StagedExtensions
+/Library/StartupItems
+/Library/SystemExtensions
+/Library/SystemMigration
+/Library/SystemProfiler
+/Library/TeX
+/Library/Updates
+/Library/User\ Pictures
+/Library/User\ Template
+/Library/Video
+/Library/WebServer
+/System
+/System/Applications
+/System/DriverKit
+/System/Library
+/System/Volumes
+/System/iOSSupport
+/Users
+/Users/Guest
+/Users/Shared
+/Users/vaclav
+/Volumes
+/Volumes/Macintosh\ HD -> /
+/Volumes/bini
+/bin
+/bin/[
+/bin/bash
+/bin/cat
+/bin/chmod
+/bin/cp
+/bin/csh
+/bin/dash
+/bin/date
+/bin/dd
+/bin/df
+/bin/echo
+/bin/ed
+/bin/expr
+/bin/hostname
+/bin/kill
+/bin/ksh
+/bin/launchctl
+/bin/link
+/bin/ln
+/bin/ls
+/bin/mkdir
+/bin/mv
+/bin/pax
+/bin/ps
+/bin/pwd
+/bin/rm
+/bin/rmdir
+/bin/sh
+/bin/sleep
+/bin/stty
+/bin/sync
+/bin/tcsh
+/bin/test
+/bin/unlink
+/bin/wait4path
+/bin/zsh
+/cores
+/dev
+/dev/afsc_type5
+/dev/auditpipe
+/dev/auditsessions
+/dev/autofs
+/dev/autofs_control
+/dev/autofs_homedirmounter
+/dev/autofs_notrigger
+/dev/autofs_nowait
+/dev/bpf0
+/dev/bpf1
+/dev/bpf2
+/dev/bpf3
+/dev/bpf4
+/dev/console
+/dev/cu.Bluetooth-Incoming-Port
+/dev/cu.JBLFlip5-vCOMM
+/dev/disk0
+/dev/disk0s1
+/dev/disk0s2
+/dev/disk1
+/dev/disk1s1
+/dev/disk1s2
+/dev/disk1s3
+/dev/disk1s4
+/dev/disk1s5
+/dev/disk1s6
+/dev/dtrace
+/dev/dtracehelper
+/dev/fbt
+/dev/fd
+/dev/fsevents
+/dev/ham0
+/dev/ham1
+/dev/ham2
+/dev/io8log
+/dev/io8logmt
+/dev/io8logtemp
+/dev/klog
+/dev/lockstat
+/dev/machtrace
+/dev/nsmb0
+/dev/null
+/dev/oslog
+/dev/oslog_stream
+/dev/osxfuse0
+/dev/osxfuse1
+/dev/osxfuse10
+/dev/osxfuse11
+/dev/osxfuse12
+/dev/osxfuse13
+/dev/osxfuse14
+/dev/osxfuse15
+/dev/osxfuse16
+/dev/osxfuse17
+/dev/osxfuse18
+/dev/osxfuse19
+/dev/osxfuse2
+/dev/osxfuse20
+/dev/osxfuse21
+/dev/osxfuse22
+/dev/osxfuse23
+/dev/osxfuse24
+/dev/osxfuse25
+/dev/osxfuse26
+/dev/osxfuse27
+/dev/osxfuse28
+/dev/osxfuse29
+/dev/osxfuse3
+/dev/osxfuse30
+/dev/osxfuse31
+/dev/osxfuse32
+/dev/osxfuse33
+/dev/osxfuse34
+/dev/osxfuse35
+/dev/osxfuse36
+/dev/osxfuse37
+/dev/osxfuse38
+/dev/osxfuse39
+/dev/osxfuse4
+/dev/osxfuse40
+/dev/osxfuse41
+/dev/osxfuse42
+/dev/osxfuse43
+/dev/osxfuse44
+/dev/osxfuse45
+/dev/osxfuse46
+/dev/osxfuse47
+/dev/osxfuse48
+/dev/osxfuse49
+/dev/osxfuse5
+/dev/osxfuse50
+/dev/osxfuse51
+/dev/osxfuse52
+/dev/osxfuse53
+/dev/osxfuse54
+/dev/osxfuse55
+/dev/osxfuse56
+/dev/osxfuse57
+/dev/osxfuse58
+/dev/osxfuse59
+/dev/osxfuse6
+/dev/osxfuse60
+/dev/osxfuse61
+/dev/osxfuse62
+/dev/osxfuse63
+/dev/osxfuse7
+/dev/osxfuse8
+/dev/osxfuse9
+/dev/pf
+/dev/pfm
+/dev/profile
+/dev/ptmx
+/dev/ptyp0
+/dev/ptyp1
+/dev/ptyp2
+/dev/ptyp3
+/dev/ptyp4
+/dev/ptyp5
+/dev/ptyp6
+/dev/ptyp7
+/dev/ptyp8
+/dev/ptyp9
+/dev/ptypa
+/dev/ptypb
+/dev/ptypc
+/dev/ptypd
+/dev/ptype
+/dev/ptypf
+/dev/ptyq0
+/dev/ptyq1
+/dev/ptyq2
+/dev/ptyq3
+/dev/ptyq4
+/dev/ptyq5
+/dev/ptyq6
+/dev/ptyq7
+/dev/ptyq8
+/dev/ptyq9
+/dev/ptyqa
+/dev/ptyqb
+/dev/ptyqc
+/dev/ptyqd
+/dev/ptyqe
+/dev/ptyqf
+/dev/ptyr0
+/dev/ptyr1
+/dev/ptyr2
+/dev/ptyr3
+/dev/ptyr4
+/dev/ptyr5
+/dev/ptyr6
+/dev/ptyr7
+/dev/ptyr8
+/dev/ptyr9
+/dev/ptyra
+/dev/ptyrb
+/dev/ptyrc
+/dev/ptyrd
+/dev/ptyre
+/dev/ptyrf
+/dev/ptys0
+/dev/ptys1
+/dev/ptys2
+/dev/ptys3
+/dev/ptys4
+/dev/ptys5
+/dev/ptys6
+/dev/ptys7
+/dev/ptys8
+/dev/ptys9
+/dev/ptysa
+/dev/ptysb
+/dev/ptysc
+/dev/ptysd
+/dev/ptyse
+/dev/ptysf
+/dev/ptyt0
+/dev/ptyt1
+/dev/ptyt2
+/dev/ptyt3
+/dev/ptyt4
+/dev/ptyt5
+/dev/ptyt6
+/dev/ptyt7
+/dev/ptyt8
+/dev/ptyt9
+/dev/ptyta
+/dev/ptytb
+/dev/ptytc
+/dev/ptytd
+/dev/ptyte
+/dev/ptytf
+/dev/ptyu0
+/dev/ptyu1
+/dev/ptyu2
+/dev/ptyu3
+/dev/ptyu4
+/dev/ptyu5
+/dev/ptyu6
+/dev/ptyu7
+/dev/ptyu8
+/dev/ptyu9
+/dev/ptyua
+/dev/ptyub
+/dev/ptyuc
+/dev/ptyud
+/dev/ptyue
+/dev/ptyuf
+/dev/ptyv0
+/dev/ptyv1
+/dev/ptyv2
+/dev/ptyv3
+/dev/ptyv4
+/dev/ptyv5
+/dev/ptyv6
+/dev/ptyv7
+/dev/ptyv8
+/dev/ptyv9
+/dev/ptyva
+/dev/ptyvb
+/dev/ptyvc
+/dev/ptyvd
+/dev/ptyve
+/dev/ptyvf
+/dev/ptyw0
+/dev/ptyw1
+/dev/ptyw2
+/dev/ptyw3
+/dev/ptyw4
+/dev/ptyw5
+/dev/ptyw6
+/dev/ptyw7
+/dev/ptyw8
+/dev/ptyw9
+/dev/ptywa
+/dev/ptywb
+/dev/ptywc
+/dev/ptywd
+/dev/ptywe
+/dev/ptywf
+/dev/random
+/dev/rdisk0
+/dev/rdisk0s1
+/dev/rdisk0s2
+/dev/rdisk1
+/dev/rdisk1s1
+/dev/rdisk1s2
+/dev/rdisk1s3
+/dev/rdisk1s4
+/dev/rdisk1s5
+/dev/rdisk1s6
+/dev/sdt
+/dev/stderr -> fd/2
+/dev/stdin -> fd/0
+/dev/stdout -> fd/1
+/dev/systrace
+/dev/tty
+/dev/tty.Bluetooth-Incoming-Port
+/dev/tty.Bosesluchatka-SPPDev-1
+/dev/tty.JBLFlip5-vCOMM
+/dev/ttyp0
+/dev/uart.BLTH
+/dev/urandom
+/dev/xcpm
+/dev/zero
+/etc -> private/etc
+/home -> /System/Volumes/Data/home
+/nix
+/opt
+/opt/cisco
+/private
+/private/etc
+/private/tftpboot
+/private/tmp
+/private/var
+/sbin
+/sbin/apfs_hfs_convert -> ../System/Library/Filesystems/apfs.fs/Contents/Resources/hfs_convert
+/sbin/disklabel
+/sbin/dmesg
+/sbin/dynamic_pager
+/sbin/emond
+/sbin/fibreconfig
+/sbin/fsck
+/sbin/fsck_apfs -> ../System/Library/Filesystems/apfs.fs/Contents/Resources/fsck_apfs
+/sbin/fsck_cs
+/sbin/fsck_exfat -> /System/Library/Filesystems/exfat.fs/Contents/Resources/fsck_exfat
+/sbin/fsck_hfs -> /System/Library/Filesystems/hfs.fs/Contents/Resources/fsck_hfs
+/sbin/fsck_msdos -> /System/Library/Filesystems/msdos.fs/Contents/Resources/fsck_msdos
+/sbin/fsck_udf -> /System/Library/Filesystems/udf.fs/Contents/Resources/fsck_udf
+/sbin/fstyp
+/sbin/fstyp_hfs
+/sbin/fstyp_msdos
+/sbin/fstyp_ntfs
+/sbin/fstyp_udf
+/sbin/halt
+/sbin/ifconfig
+/sbin/kextload
+/sbin/kextunload
+/sbin/launchd
+/sbin/md5
+/sbin/mknod
+/sbin/mount
+/sbin/mount_9p
+/sbin/mount_acfs -> /System/Library/Filesystems/acfs.fs/Contents/bin/mount_acfs
+/sbin/mount_afp
+/sbin/mount_apfs -> ../System/Library/Filesystems/apfs.fs/Contents/Resources/mount_apfs
+/sbin/mount_cd9660 -> /System/Library/Filesystems/cd9660.fs/Contents/Resources/mount_cd9660
+/sbin/mount_cddafs -> /System/Library/Filesystems/cddafs.fs/Contents/Resources/mount_cddafs
+/sbin/mount_devfs
+/sbin/mount_exfat -> /System/Library/Filesystems/exfat.fs/Contents/Resources/mount_exfat
+/sbin/mount_fdesc
+/sbin/mount_ftp -> /System/Library/Filesystems/ftp.fs/Contents/Resources/mount_ftp
+/sbin/mount_hfs -> /System/Library/Filesystems/hfs.fs/Contents/Resources/mount_hfs
+/sbin/mount_msdos -> /System/Library/Filesystems/msdos.fs/Contents/Resources/mount_msdos
+/sbin/mount_nfs
+/sbin/mount_ntfs -> /System/Library/Filesystems/ntfs.fs/Contents/Resources/mount_ntfs
+/sbin/mount_smbfs
+/sbin/mount_udf -> /System/Library/Filesystems/udf.fs/Contents/Resources/mount_udf
+/sbin/mount_webdav
+/sbin/mpioutil
+/sbin/newfs_apfs -> ../System/Library/Filesystems/apfs.fs/Contents/Resources/newfs_apfs
+/sbin/newfs_exfat -> /System/Library/Filesystems/exfat.fs/Contents/Resources/newfs_exfat
+/sbin/newfs_hfs -> /System/Library/Filesystems/hfs.fs/Contents/Resources/newfs_hfs
+/sbin/newfs_msdos -> /System/Library/Filesystems/msdos.fs/Contents/Resources/newfs_msdos
+/sbin/newfs_udf -> /System/Library/Filesystems/udf.fs/Contents/Resources/newfs_udf
+/sbin/nfsd
+/sbin/nfsiod
+/sbin/nologin
+/sbin/pfctl
+/sbin/ping
+/sbin/ping6
+/sbin/quotacheck
+/sbin/reboot
+/sbin/route
+/sbin/rtsol
+/sbin/shutdown
+/sbin/umount
+/tmp -> private/tmp
+/usr
+/usr/X11 -> ../private/var/select/X11
+/usr/X11R6 -> ../private/var/select/X11
+/usr/bin
+/usr/lib
+/usr/libexec
+/usr/local
+/usr/sbin
+/usr/share
+/usr/standalone
+/var -> private/var

@@ -338,7 +338,68 @@ tree_data = """223.911 231.697 m
 102.449 626.893 l
 """
 
-bacteria_leaves = [0, 2, 4, 6, 8, 10, 14, 15, 17, 19, 20, 22, 26, 27, 28, 30, 33, 35, 36, 41, 42, 45, 48, 49, 50, 52, 54, 56, 57, 58, 60, 64, 66, 68, 70, 71, 73, 74, 77, 79, 81, 82, 84, 89, 90, 92, 94, 95, 96, 99, 100, 103, 104, 107, 108, 110, 113, 114, 116, 117]
+bacteria_leaves = [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    14,
+    15,
+    17,
+    19,
+    20,
+    22,
+    26,
+    27,
+    28,
+    30,
+    33,
+    35,
+    36,
+    41,
+    42,
+    45,
+    48,
+    49,
+    50,
+    52,
+    54,
+    56,
+    57,
+    58,
+    60,
+    64,
+    66,
+    68,
+    70,
+    71,
+    73,
+    74,
+    77,
+    79,
+    81,
+    82,
+    84,
+    89,
+    90,
+    92,
+    94,
+    95,
+    96,
+    99,
+    100,
+    103,
+    104,
+    107,
+    108,
+    110,
+    113,
+    114,
+    116,
+    117,
+]
 
 example_edges = [
     (0, 1),
@@ -381,3 +442,26 @@ example_edges = [
 example_vertices = np.unique(
     np.array([item for sublist in example_edges for item in sublist])
 )
+
+import os
+
+
+def parse_linux_tree(path, n_vertices=None):
+    edges = set()
+    with open(path) as f:
+        lines = f.readlines()
+
+        if n_vertices is not None:
+            lines = lines[::len(lines) // n_vertices]
+
+        for line in lines:
+            line = line.strip()
+            if " -> " in line:
+                line = line[: line.index(" -> ")]
+
+            while line != "/":
+                parent = os.path.dirname(line)
+                edges.add((line, parent))
+                line = parent
+
+    return edges

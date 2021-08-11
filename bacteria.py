@@ -230,7 +230,6 @@ class Bacteria(Scene):
 
         longest = g.get_path(a, b)
 
-
         self.play(Create(g))
         self.wait(1)
 
@@ -240,4 +239,31 @@ class Bacteria(Scene):
 
         self.play(g.animate.change_layout("kamada_kawai"))
 
+        self.wait(1)
+
+
+class Filesystem(Scene):
+    def construct(self):
+        edges = tree_data.parse_linux_tree("vv_filesystem_L2_edited.txt")
+
+        vertices = set()
+        for edge in edges:
+            vertices.add(edge[0])
+            vertices.add(edge[1])
+
+        # labels = dict((v, Text(v, fill_color=solarized.ORANGE)) for v in vertices)
+        # labels["/Applications"] = Text("/Applications", fill_color=solarized.ORANGE)
+
+        g = Tree(
+            vertices,
+            edges,
+            layout="kamada_kawai",
+            layout_scale=3,
+            vertex_config={"color": solarized.BASE00},
+            edge_config={"color": solarized.BASE00},
+            # labels=labels,
+        )
+
+        # self.play(DrawBorderThenFill(g))
+        self.play(Create(g))
         self.wait(1)
