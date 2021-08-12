@@ -1,5 +1,9 @@
 from manim import *
 
+import solarized
+import tree_data
+from util import Tree
+
 
 class Naive(Scene):
     def construct(self):
@@ -33,11 +37,58 @@ class Algorithm(Scene):
         # Next, we find the distance from it to all other nodes.
 
         # TODO: animace toho, jak se vybere a a jede bfs
+        # TODO: přidat labely "a", "b". Možná i "c"
+        self.g = Tree(
+            tree_data.example_vertices,
+            tree_data.example_edges,
+            layout="kamada_kawai",
+            layout_scale=3.5,
+            vertex_config={
+                # "radius": 0.2,
+                "color": solarized.BASE00
+            },
+            edge_config={"color": solarized.BASE00},
+            # labels=True
+        )
+        self.play(Create(self.g))
 
-        # TODO: zvýraznit b
+        config = [(52, 21, 64, solarized.RED), (40, 80, 46, solarized.BLUE)]
+        
+        # TODO: druhou iteraci prehrat rychleji
+        for va, vb, vc, color in config:
+            scale_factor = 3.0
 
-        # TODO: animace bfs, vyznačí se cesta mezi b a c
+            self.wait()
+            self.play(self.g[va].animate.scale(scale_factor))
+            anim1, anim2 = self.g.bfs_animation(va, turn_furthest_off=False)
 
-        # TODO: zase animace, stejný strom ale jiné a, vyjde jiná nejdelší cesta
+            self.play(anim1)
+            self.play(anim2)
+            self.wait(1)
+            
+            self.play(
+                self.g[va].animate.scale(1 / scale_factor),
+                self.g[vb].animate.scale(scale_factor),
+            )
+            self.play(self.g.animate.set_colors_all(solarized.BASE00))
+            anim1, anim2 = self.g.bfs_animation(vb, turn_furthest_off=False)
+            self.play(anim1)
+            self.play(anim2)
+
+            self.wait()
+            self.play(self.g[vc].animate.scale(scale_factor))
+            self.play(self.g.animate.set_colors_all(solarized.BASE00))
+
+            self.play(self.g.animate.set_path_color(vb, vc, color))
+            self.wait(2)
+
+            self.play(
+                self.g[vb].animate.scale(1 / scale_factor),
+                self.g[vc].animate.scale(1 / scale_factor),
+            )
+            self.play(self.g.animate.set_colors_all(solarized.BASE00))
+
+        self.play(self.g.animate.set_path_color(config[0][1], config[0][2], config[0][3]))
+        self.wait(2)
 
         # TODO: animace terminálu, kde vašek klikne a hned vidí výsledek

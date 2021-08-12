@@ -1,3 +1,4 @@
+from re import A
 from scipy.optimize import linprog
 from manim import *
 
@@ -5,6 +6,19 @@ import solarized
 
 
 class Tree(Graph):
+    def __init__(self, *args, **kwargs):
+        # Hack to fix "labels=True" when TeX is not available
+        # (uses `Text` instead of `MathTex`)
+        if kwargs.get("labels") == True:
+            # Assumes vertices are positional arg
+            assert "vertices" not in kwargs
+            labels = dict(
+                (v, Text(str(v), fill_color=BLACK, size=0.25)) for v in args[0]
+            )
+            kwargs["labels"] = labels
+
+        super().__init__(*args, **kwargs)
+
     def get_adjacency_list(self):
         adj = dict([(v, []) for v in self.vertices])
         for v1, v2 in self.edges:
@@ -193,18 +207,15 @@ class Tree(Graph):
 
         return positions
 
-    def bfs_animation(self, start, turn_furthest_off=True):
+    def bfs_animation(self, start, turn_furthest_off=True, time_per_step=0.5):
+        color = solarized.MAGENTA
+
         v_layers, e_layers, _ = self.bfs(start)
         e_layers.append([])
 
         def vertex_on(v: Dot):
-            v.set_fill(solarized.RED)
+            v.set_fill(color)
             # v.scale(1.5)
-            return v
-
-        def vertex_off(v):
-            v.set_fill(solarized.RED)
-            # v.scale(1 / 1.5)
             return v
 
         all_progress_lines = []
@@ -212,20 +223,24 @@ class Tree(Graph):
         all_anims = []
         to_unhighlight = []
 
+        anims_next = []
         for i in range(len(v_layers)):
-            anims = []
+            anims = anims_next
+            anims_next = []
 
             for (v1, v2) in e_layers[i]:
                 progress_line = Line(
                     self[v1].get_center(),
                     self[v2].get_center(),
-                    color=solarized.RED,
+                    color=color,
                     stroke_width=DEFAULT_STROKE_WIDTH * 1.1,
                 )
                 all_progress_lines.append(progress_line)
                 anims.append(Create(progress_line, rate_func=linear))
 
             for v in v_layers[i]:
+                anims_next.append(Flash(self[v], color=solarized.BASE01, time_width=0.5))
+
                 if v != start:
                     if i == len(v_layers) - 1 and not turn_furthest_off:
                         # Do not turn these off.
@@ -235,14 +250,18 @@ class Tree(Graph):
                         anims.append(
                             Succession(
                                 ApplyFunction(vertex_on, self[v]),
-                                ApplyFunction(vertex_off, self[v]),
+                                # ApplyFunction(vertex_off, self[v]),
                                 run_time=1,
                             )
                         )
+  
+            all_anims.append(AnimationGroup(*anims, run_time=time_per_step))
 
-            all_anims.append(AnimationGroup(*anims, run_time=0.5))
+        # Add any remaining animations
+        all_anims.append(AnimationGroup(*anims_next, run_time=time_per_step))
 
-        return Succession(
+        # Tuple of animations
+        return (
             AnimationGroup(*all_anims, lag_ratio=0.95),
             # Cleanup animations
             AnimationGroup(
