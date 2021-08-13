@@ -207,11 +207,20 @@ class Tree(Graph):
 
         return positions
 
-    def bfs_animation(self, start, turn_furthest_off=True, time_per_step=0.5):
+    def bfs_animation(
+        self,
+        start,
+        turn_furthest_off=True,
+        time_per_step=0.5,
+        override_layers=None, # Použije tyhle data místo bfs
+    ):
         color = solarized.MAGENTA
 
-        v_layers, e_layers, _ = self.bfs(start)
-        e_layers.append([])
+        if override_layers is None:
+            v_layers, e_layers, _ = self.bfs(start)
+            e_layers.append([])
+        else:
+            v_layers, e_layers = override_layers
 
         def vertex_on(v: Dot):
             v.set_fill(color)
@@ -239,22 +248,23 @@ class Tree(Graph):
                 anims.append(Create(progress_line, rate_func=linear))
 
             for v in v_layers[i]:
-                anims_next.append(Flash(self[v], color=solarized.BASE01, time_width=0.5))
+                anims_next.append(
+                    Flash(self[v], color=solarized.BASE01, time_width=0.5)
+                )
 
-                if v != start:
-                    if i == len(v_layers) - 1 and not turn_furthest_off:
-                        # Do not turn these off.
-                        anims.append(ApplyFunction(vertex_on, self[v]))
-                    else:
-                        to_unhighlight.append(v)
-                        anims.append(
-                            Succession(
-                                ApplyFunction(vertex_on, self[v]),
-                                # ApplyFunction(vertex_off, self[v]),
-                                run_time=1,
-                            )
+                if i == len(v_layers) - 1 and not turn_furthest_off:
+                    # Do not turn these off.
+                    anims.append(ApplyFunction(vertex_on, self[v]))
+                else:
+                    to_unhighlight.append(v)
+                    anims.append(
+                        Succession(
+                            ApplyFunction(vertex_on, self[v]),
+                            # ApplyFunction(vertex_off, self[v]),
+                            run_time=1,
                         )
-  
+                    )
+
             all_anims.append(AnimationGroup(*anims, run_time=time_per_step))
 
         # Add any remaining animations

@@ -1,33 +1,138 @@
 from manim import *
 
+import solarized
+import tree_data
+from util import Tree
+
+
+class Misof(Scene):
+    def construct(self):
+        # TODO: osnova: Why it works
+
+        cover = ImageMobject("img/forisek_steinova.jpg").scale(1.5)
+        text = Text("Michal Forišek\nMonika Steinová", color=solarized.BASE00)
+        cover.shift(3 * LEFT)
+        text.shift(2 * RIGHT)
+        self.play(FadeIn(cover))
+        self.play(Create(text))
+        self.wait(1)
+
 
 class PhysicalModel(Scene):
     def construct(self):
         pass
-        # TODO: osnova: Why it works
+        # [fyzická demonstrace odteď dál, bude to ten stejný strom a run algoritmu jako předtím,
+        #   jen fyzicky, klidně vedle toho může být obrázek té původní animace aby to šlo srovnat]
 
-        # TODO: obrázek knížky a jména autorů
+        # Pokud chceme, muzeme dat tuhle animaci k fyzickemu modelu
+        scale_factor = 3.0
+        self.g = Tree(
+            tree_data.example_vertices,
+            tree_data.example_edges,
+            layout="kamada_kawai",
+            layout_scale=3.5,
+            vertex_config={"color": solarized.BASE00},
+            edge_config={"color": solarized.BASE00},
+            # labels=True
+        )
+        self.play(Create(self.g))
 
-        # TODO: fyzická demonstrace odteď dál, bude to ten stejný strom a run algoritmu jako předtím,
-        #   jen fyzicky, klidně vedle toho může být obrázek té původní animace aby to šlo srovnat
+        va = 52
+        self.wait()
+        self.play(self.g[va].animate.scale(scale_factor))
+        anim1, anim2 = self.g.bfs_animation(va, turn_furthest_off=False)
 
-        # TODO: vedle vaška se udělá animace, která zopakuje breadth first search z vrcholu.
-        #   Pak animace strom zavěsí za stejnou nodu jako vašek
+        self.play(anim1)
+        self.play(anim2)
+        self.wait(1)
 
-        # TODO: drží to horizontálně jako trojúhelník
+        hanging = self.g.hanging_position(va, va, shift=(-4, 3, 0))
+        self.play(self.g.animate.change_layout(hanging))
+        self.wait(1)
 
 
 class Triangle(Scene):
     def construct(self):
         pass
-        # TODO: tady někde se přejde zpátky k animaci, vyznačí se trojúhelník
+        b1, c1 = 21, 64
+        b2, c2 = 46, 80
 
-        # TODO: strom se složí do nějakého výchozího postavení, pak se prohodí nejdelší cesta
+        self.g = Tree(
+            tree_data.example_vertices,
+            tree_data.example_edges,
+            layout="kamada_kawai",
+            layout_scale=3.5,
+            vertex_config={"color": solarized.BASE00},
+            edge_config={"color": solarized.BASE00},
+            # labels=True,
+        )
+        hanging = self.g.hanging_position(b1, c1, shift=UP, scale=1.0)
+        self.g.change_layout(hanging)
 
-        # TODO: animace, zvýraznit třetí vrchol horní cesty a pak vzdálenost k levému
+        self.play(Create(self.g))
+        self.wait()
+
+        tleft = hanging[b1]
+        tright = hanging[c1]
+        tmid = (tleft + tright) / 2.0
+        tbot = tmid - [(tmid - tleft)[1], (tmid - tleft)[0], 0]
+
+        def flash_triangle():
+            ltop = Line(tright, tleft, color=solarized.GREEN)
+            lleft = Line(tleft, tbot, color=solarized.GREEN)
+            lright = Line(tbot, tright, color=solarized.GREEN)
+            self.play(Create(ltop), Create(lleft), Create(lright), time=2)
+            self.play(Uncreate(ltop), Uncreate(lleft), Uncreate(lright), time=2)
+            self.wait(1)
+
+        flash_triangle()
+
+        self.play(self.g.animate.set_path_color(b2, c2))
+        self.wait(1)
+
+        self.play(
+            self.g.animate.change_layout(
+                self.g.hanging_position(b2, c2, shift=UP, scale=1.0)
+            )
+        )
+
+        self.wait(1)
+        self.play(self.g.animate.set_colors_all())
+
+        flash_triangle()
+
+        # animace, zvýraznit třetí vrchol horní cesty a pak vzdálenost k levému
         #   kraji a ke spodku podstromu (vzdálenost je stejná)
+        b3, c3 = 64, 80
+        v_layers = [[6], [60, 7], [61, 8], [64, 80]]
+        e_layers = [[(6, 60), (6, 7)], [(60, 61), (7, 8)], [(61, 64), (8, 80)], []]
+        anim1, anim2 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers))
+        self.play(anim1)
+        self.wait(1)
+        self.play(anim2)
+        self.wait(1)
 
-        # TODO: důkaz trojúhelníkovosti sporem - animace sporné cesty
+        self.play(self.g.animate.set_colors_all())
+
+        b4, c4 = 64, 100
+        # důkaz trojúhelníkovosti sporem - animace sporné cesty
+        self.play(
+            self.g.animate.add_vertices(
+                c4,
+                positions={c4: self.g[b4].get_center() + DOWN},
+                vertex_config={"color": solarized.RED},
+            ),
+            self.g.animate.add_edges(
+                (b4, c4),
+                edge_config={"color": solarized.RED},
+            ),
+        )
+        self.play(Flash(self.g[c4], color=solarized.RED))
+        self.wait()
+
+        self.play(self.g.animate.set_path_color(b2, c4))
+
+        self.wait()
 
 
 class Proof(Scene):
