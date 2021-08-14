@@ -10,8 +10,6 @@ class Naive(OScene):
     def construct(self):
         self.outline(2)
 
-        # TODO: osnova: Algorithm
-        
         # animace nkrát zkopírovaného grafu (už je to náš příkladový graf),
         #   na každém běží bfs z jednoho vrcholu, důležité, aby jednotlivá bfs
         #   běžela sekvenčně a každé bfs běželo sekvenčně
@@ -97,7 +95,6 @@ class Algorithm(Scene):
         # Here is how it works. We start by picking one node in our tree, it doesn't matter which one. We call it, say, a.
         # Next, we find the distance from it to all other nodes.
 
-        # TODO: animace toho, jak se vybere a a jede bfs
         # TODO: přidat labely "a", "b". Možná i "c"
         self.g = Tree(
             tree_data.example_vertices,

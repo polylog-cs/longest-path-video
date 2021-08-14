@@ -431,7 +431,7 @@ def parse_linux_tree(path, n_vertices=None):
             if " -> " in line:
                 line = line[: line.index(" -> ")]
 
-            while line != "/":
+            while line != "/" and "/" in line:
                 parent = os.path.dirname(line)
                 edges.add((line, parent))
                 line = parent

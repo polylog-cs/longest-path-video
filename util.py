@@ -4,25 +4,29 @@ from manim import *
 
 import solarized
 
+
 class OScene(Scene):
     def outline(self, part):
-        greyish = GREY
-        outline_list = [Tex("1) Trees", color = greyish), \
-            Tex("2) The Algorithm", color = greyish), \
-            Tex("3) Why It Works?", color = greyish)]
-        
+        greyish = solarized.BASE00
+        outline_list = [
+            Tex("1) Trees", color=greyish),
+            Tex("2) The algorithm", color=greyish),
+            Tex("3) Why it works", color=greyish),
+        ]
+
         full_list = VGroup(*outline_list).arrange(DOWN)
 
         for i in range(3):
             outline_list[i].align_to(full_list, LEFT)
-        
+
         self.play(FadeIn(full_list))
 
-        self.play(Indicate(outline_list[part-1]))
+        self.play(Indicate(outline_list[part - 1], color=solarized.YELLOW))
+        self.wait()
 
         self.play(FadeOut(full_list))
-  
-  
+
+
 class Tree(Graph):
     def __init__(self, *args, **kwargs):
         # Hack to fix "labels=True" when TeX is not available
@@ -345,3 +349,31 @@ class Tree(Graph):
 
         assert best is not None
         return best
+
+
+class ExternalLabeledDot(Dot):
+    def __init__(self, label, *args, **kwargs):
+        if isinstance(label, str):
+            rendered_label = Tex(label, color=solarized.BASE00)
+        else:
+            rendered_label = label
+
+        self.label = rendered_label
+        super().__init__(*args, **kwargs)
+
+        self.label.move_to(self.get_center())
+        self.add(label)
+
+    def reposition_label(self, g: Tree, v):
+        pos = g.get_annotation_position(v)
+
+        alignment = LEFT
+        if (pos - g[v].get_center())[0] < 0:
+            alignment = RIGHT
+
+        self.label.move_to(pos).shift(-self.label.width * 0.5 * alignment)
+    
+    def get_center(self) -> np.ndarray:
+        # This ignores the label when computing the center,
+        # only considering the dot
+        return self.get_arc_center()
