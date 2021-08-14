@@ -4,7 +4,25 @@ from manim import *
 
 import solarized
 
+class OScene(Scene):
+    def outline(self, part):
+        greyish = GREY
+        outline_list = [Tex("1) Trees", color = greyish), \
+            Tex("2) The Algorithm", color = greyish), \
+            Tex("3) Why It Works?", color = greyish)]
+        
+        full_list = VGroup(*outline_list).arrange(DOWN)
 
+        for i in range(3):
+            outline_list[i].align_to(full_list, LEFT)
+        
+        self.play(FadeIn(full_list))
+
+        self.play(Indicate(outline_list[part-1]))
+
+        self.play(FadeOut(full_list))
+  
+  
 class Tree(Graph):
     def __init__(self, *args, **kwargs):
         # Hack to fix "labels=True" when TeX is not available

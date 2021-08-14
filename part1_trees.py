@@ -5,6 +5,7 @@ import math
 import solarized
 import tree_data
 from util import Tree
+from util import OScene
 
 class RotPolygon(Polygon):
     def align_and_rotate(self, obj, leftright, bottomtop, rot):
@@ -203,24 +204,7 @@ class TheBook(Scene):
 
         self.wait(10)
 
-class OScene(Scene):
-    def outline(self, part):
-        greyish = GREY
-        outline_list = [Tex("1) Trees", color = greyish), \
-            Tex("2) The Algorithm", color = greyish), \
-            Tex("3) Why It Works?", color = greyish)]
-        
-        full_list = VGroup(*outline_list).arrange(DOWN)
 
-        for i in range(3):
-            outline_list[i].align_to(full_list, LEFT)
-        
-        self.play(FadeIn(full_list))
-
-        self.play(Indicate(outline_list[part-1]))
-
-        self.play(FadeOut(full_list))
-  
 
 class TreeIntro(OScene):
     def construct(self):
