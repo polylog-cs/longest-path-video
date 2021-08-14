@@ -3,14 +3,16 @@ from manim import *
 import solarized
 import tree_data
 from util import Tree
+from util import OScene
 
-
-class Misof(Scene):
+class Misof(OScene):
     def construct(self):
         # TODO: osnova: Why it works
 
+        self.outline(3)
+
         cover = ImageMobject("img/forisek_steinova.jpg").scale(1.5)
-        text = Text("Michal Forišek\nMonika Steinová", color=solarized.BASE00)
+        text = Tex(r"Michal Forišek\\Monika Steinová", color=solarized.BASE00)
         cover.shift(3 * LEFT)
         text.shift(2 * RIGHT)
         self.play(FadeIn(cover))

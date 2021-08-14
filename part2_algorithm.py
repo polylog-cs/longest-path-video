@@ -3,11 +3,13 @@ from manim import *
 import solarized
 import tree_data
 from util import Tree
+from util import OScene
 
 
-class Naive(Scene):
+class Naive(OScene):
     def construct(self):
-        pass
+        self.outline(2)
+
         # TODO: osnova: Algorithm
         
         # animace nkrát zkopírovaného grafu (už je to náš příkladový graf),
