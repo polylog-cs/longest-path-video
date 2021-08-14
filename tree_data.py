@@ -468,6 +468,22 @@ example_vertices = np.unique(
     np.array([item for sublist in example_edges for item in sublist])
 )
 
+even_example_edges = [
+    (1, 2),
+    (2, 3),
+    (3, 4),
+    (4, 5),
+    (2, 20),
+    (3, 30),
+    (30, 32),
+    (3, 31),
+    (31, 33),
+    (31, 34),
+]
+even_example_vertices = np.unique(
+    np.array([item for sublist in even_example_edges for item in sublist])
+)
+
 import os
 
 
@@ -477,7 +493,7 @@ def parse_linux_tree(path, n_vertices=None):
         lines = f.readlines()
 
         if n_vertices is not None:
-            lines = lines[::len(lines) // n_vertices]
+            lines = lines[:: len(lines) // n_vertices]
 
         for line in lines:
             line = line.strip()
