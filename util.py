@@ -212,7 +212,8 @@ class Tree(Graph):
         start,
         turn_furthest_off=True,
         time_per_step=0.5,
-        override_layers=None, # Použije tyhle data místo bfs
+        override_layers=None,  # Použije tyhle data místo bfs
+        annotations=True,
     ):
         color = solarized.MAGENTA
 
@@ -227,7 +228,7 @@ class Tree(Graph):
             # v.scale(1.5)
             return v
 
-        all_progress_lines = []
+        temp_mobjects = []
 
         all_anims = []
         to_unhighlight = []
@@ -244,26 +245,35 @@ class Tree(Graph):
                     color=color,
                     stroke_width=DEFAULT_STROKE_WIDTH * 1.1,
                 )
-                all_progress_lines.append(progress_line)
+                temp_mobjects.append(progress_line)
                 anims.append(Create(progress_line, rate_func=linear))
 
             for v in v_layers[i]:
                 anims_next.append(
-                    Flash(self[v], color=solarized.BASE01, time_width=0.5)
+                    Flash(self[v], color=solarized.BASE1, time_width=0.25)
                 )
+
+                anims.append(ApplyFunction(vertex_on, self[v]))
+
+                if annotations:
+                    annotation = (
+                        Text(
+                            str(i),
+                            color=solarized.BASE00,
+                            font="Helvetica Neue",
+                            weight="SEMIBOLD",
+                        )
+                        .scale(0.5)
+                        .move_to(self.get_annotation_position(v))
+                    )
+                    anims_next.append(Create(annotation))
+                    temp_mobjects.append(annotation)
 
                 if i == len(v_layers) - 1 and not turn_furthest_off:
                     # Do not turn these off.
-                    anims.append(ApplyFunction(vertex_on, self[v]))
+                    pass
                 else:
                     to_unhighlight.append(v)
-                    anims.append(
-                        Succession(
-                            ApplyFunction(vertex_on, self[v]),
-                            # ApplyFunction(vertex_off, self[v]),
-                            run_time=1,
-                        )
-                    )
 
             all_anims.append(AnimationGroup(*anims, run_time=time_per_step))
 
@@ -276,7 +286,7 @@ class Tree(Graph):
             # Cleanup animations
             AnimationGroup(
                 *(
-                    [FadeOut(l) for l in all_progress_lines]
+                    [FadeOut(l) for l in temp_mobjects]
                     + [
                         self[v].animate.set_fill(solarized.BASE00)
                         for v in to_unhighlight
@@ -284,3 +294,36 @@ class Tree(Graph):
                 ),
             ),
         )
+
+    def get_annotation_position(self, vi):
+        v: Dot = self[vi]
+
+        # v.radius does not take into account v.scale(3.) etc
+        radius = np.linalg.norm(v.get_top() - v.get_bottom()) / 2
+        distance = radius + 0.2
+
+        neighbors = self.get_adjacency_list()[vi]
+
+        if not neighbors:
+            return v.get_center() + UP * distance
+
+        best = None
+        best_score = None
+        for angle in np.linspace(0, 2 * np.pi):
+            pos = v.get_center()
+            pos[0] += np.cos(angle) * distance
+            pos[1] += np.sin(angle) * distance
+
+            score = 1000000
+            for nei in neighbors:
+                ne: Dot = self[nei]
+                score = min(score, np.linalg.norm(pos - ne.get_center()))
+
+            if best is None or score > best_score:
+                best = pos
+                best_score = score
+                # if vi == 52:
+                #     print("Angle", angle, best_score, pos)
+
+        assert best is not None
+        return best
