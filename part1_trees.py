@@ -350,7 +350,7 @@ class TreeExamples(Scene):
 
         self.play(file_tree.animate.shift(LEFT * 4).scale(0.6))
 
-        # TODO: nejak ukazat jako vystup prikazu `tree`?
+        # TODO (VV): nejak ukazat jako vystup prikazu `tree`?
 
         # bacteria
 

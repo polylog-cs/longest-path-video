@@ -95,7 +95,7 @@ class Algorithm(Scene):
         # Here is how it works. We start by picking one node in our tree, it doesn't matter which one. We call it, say, a.
         # Next, we find the distance from it to all other nodes.
 
-        # TODO: přidat labely "a", "b". Možná i "c"
+        # TODO (VV): přidat labely "a", "b". Možná i "c"
         self.g = Tree(
             tree_data.example_vertices,
             tree_data.example_edges,
@@ -112,7 +112,7 @@ class Algorithm(Scene):
 
         config = [(52, 21, 64, solarized.RED), (40, 80, 46, solarized.BLUE)]
 
-        # TODO: druhou iteraci prehrat rychleji
+        # TODO (VV): druhou iteraci prehrat rychleji
         for va, vb, vc, color in config:
             scale_factor = 3.0
 
