@@ -1,4 +1,7 @@
-vaclav/Documents/ETH/Thesis
-vaclav/Documents/ETH/Notes
-vaclav/Movies/Pelíšky.mp4
-vaclav/Documents/SoME1
+/Documents/ETH/Thesis
+/Documents/ETH/Notes
+/Movies
+/Documents/SoME1
+/Documents/Books
+/Downloads
+/Pictures

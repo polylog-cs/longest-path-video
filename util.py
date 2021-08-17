@@ -28,14 +28,14 @@ class OScene(Scene):
 
 
 class Tree(Graph):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, label_class=Text, **kwargs):
         # Hack to fix "labels=True" when TeX is not available
         # (uses `Text` instead of `MathTex`)
         if kwargs.get("labels") == True:
             # Assumes vertices are positional arg
             assert "vertices" not in kwargs
             labels = dict(
-                (v, Text(str(v), fill_color=BLACK, size=0.25)) for v in args[0]
+                (v, label_class(str(v), fill_color=solarized.BASE00).scale(0.7)) for v in args[0]
             )
             kwargs["labels"] = labels
 
@@ -354,7 +354,7 @@ class Tree(Graph):
 class ExternalLabeledDot(Dot):
     def __init__(self, label, *args, **kwargs):
         if isinstance(label, str):
-            rendered_label = Tex(label, color=solarized.BASE00)
+            rendered_label = Tex(label, color=solarized.BASE00).scale(3)
         else:
             rendered_label = label
 

@@ -305,8 +305,6 @@ class TreeIntro(OScene):
 
 class TreeExamples(Scene):
     def construct(self):
-        # TODO: vic promyslet ukazkovy strom
-        # TODO: opravit rozbity kerning
         edges = tree_data.parse_linux_tree("fictional_filesystem.txt")
 
         vertices = set()
@@ -314,8 +312,21 @@ class TreeExamples(Scene):
             vertices.add(edge[0])
             vertices.add(edge[1])
 
-        # labels = dict((v, Text(v, fill_color=solarized.ORANGE)) for v in vertices)
-        # labels["/Applications"] = Text("/Applications", fill_color=solarized.ORANGE)
+        # vertex order influences layout
+        vertices = sorted(list(vertices))
+        # import os
+        # seed = int(os.environ["seed"])
+        # self.add(Text(str(seed), color=RED))
+        """
+        # seed search (Fish shell):
+        for seed in (seq 100)
+            env seed={$seed} manim -pql part1_trees.py TreeExamples -s
+            sleep 1
+        end
+        """
+        seed = 1
+        rng: np.random.Generator = np.random.default_rng(seed=seed)
+        rng.shuffle(vertices)
 
         file_tree = Tree(
             vertices,
@@ -327,6 +338,7 @@ class TreeExamples(Scene):
             # labels=labels,
             vertex_type=ExternalLabeledDot,
             labels=True,
+            label_class=Tex,
         )
 
         for v in file_tree.vertices:
@@ -335,6 +347,10 @@ class TreeExamples(Scene):
         # self.play(DrawBorderThenFill(g))
         self.play(Create(file_tree))
         self.wait(1)
+
+        self.play(file_tree.animate.shift(LEFT * 4).scale(0.6))
+
+        # TODO: nejak ukazat jako vystup prikazu `tree`?
 
         # bacteria
 
@@ -348,10 +364,9 @@ class TreeExamples(Scene):
             vertices,
             edges,
             layout=positions,  # "kamada_kawai",
-            labels=True,
+            # labels=True,
             vertex_config={"radius": node_radius, "color": base_color},
             edge_config={"color": base_color},
-            # labels=labels,
         )
 
         self.play(Create(g))

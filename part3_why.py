@@ -7,8 +7,6 @@ from util import OScene
 
 class Misof(OScene):
     def construct(self):
-        # TODO: osnova: Why it works
-
         self.outline(3)
 
         cover = ImageMobject("img/forisek_steinova.jpg").scale(1.5)
@@ -234,17 +232,6 @@ class Proof(Scene):
 
         self.play(anim12, anim22)
 
-        # Finally, we have reached all the nodes to the right of a, because the
-        # furthest one, in the right tip of the triangle, is definitely strictly
-        # closer than the node in the furthest left tip.
-        #
-        # TODO: animace toho, jak algoritmus postupuje, stopne krok před cílem,
-        # pak se tam občas objeví nějaké čáry, když se porovnávají vzdálenosti
-
-        # TODO: nějak se vyznačí vrcholy na levé hraně trojúhelníka
-
-        # TODO: animace ohne cestu co jsme našli na tu horní, aby se ukázalo, že jsou
-        #   stejně dlouhé
 
     def highlight_left_edge(self):
         v_edge_top = 21
@@ -297,6 +284,3 @@ class EvenCase(Scene):
 
         self.play(self.g.animate.set_path_color(32, 34))
         self.wait()
-
-        # TODO: obrázek druhého casu, bude napravo od prvního (příprava na nadcházející animaci)
-        # TODO: nechat to viewera rozdejchat
