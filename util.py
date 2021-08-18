@@ -1,30 +1,10 @@
 from re import A
 from scipy.optimize import linprog
 from manim import *
-
+import math
 import solarized
 
 
-class OScene(Scene):
-    def outline(self, part):
-        greyish = solarized.BASE00
-        outline_list = [
-            Tex("1) Trees", color=greyish),
-            Tex("2) The algorithm", color=greyish),
-            Tex("3) Why it works", color=greyish),
-        ]
-
-        full_list = VGroup(*outline_list).arrange(DOWN)
-
-        for i in range(3):
-            outline_list[i].align_to(full_list, LEFT)
-
-        self.play(FadeIn(full_list))
-
-        self.play(Indicate(outline_list[part - 1], color=solarized.YELLOW))
-        self.wait()
-
-        self.play(FadeOut(full_list))
 
 
 class Tree(Graph):
@@ -49,7 +29,18 @@ class Tree(Graph):
 
         return adj
 
-    
+    def rot(self, mid, theta):
+        new_layout = {}
+        for u in self.vertices:
+            pos_u = self[u].get_center()
+            pos_u -= mid
+            new_layout[u] = np.array( \
+                (pos_u[0] * math.cos(theta) + pos_u[1] * math.sin(theta), \
+                pos_u[1] * math.cos(theta) - pos_u[0] * math.sin(theta), \
+                pos_u[2])\
+                )
+            new_layout[u] += mid
+        self.change_layout(new_layout)
 
     def bfs(self, start):
         adj = self.get_adjacency_list()
@@ -383,3 +374,47 @@ class ExternalLabeledDot(Dot):
         # This ignores the label when computing the center,
         # only considering the dot
         return self.get_arc_center()
+
+class OScene(Scene):
+    def outline(self, part):
+        greyish = solarized.BASE00
+        outline_list = [
+            Tex("1) Trees", color=greyish),
+            Tex("2) The algorithm", color=greyish),
+            Tex("3) Why it works", color=greyish),
+        ]
+
+        full_list = VGroup(*outline_list).arrange(DOWN)
+
+        for i in range(3):
+            outline_list[i].align_to(full_list, LEFT)
+
+        self.play(FadeIn(full_list))
+
+        self.play(Indicate(outline_list[part - 1], color=solarized.YELLOW))
+        self.wait()
+
+        self.play(FadeOut(full_list))
+
+
+class RotPolygon(Polygon):
+    def align_and_rotate(self, obj, leftright, bottomtop, rot, correction = np.array((0,0,0))):
+        self.rotate(rot)
+        self.align_to(obj, leftright)
+        self.align_to(obj, bottomtop)
+        self.shift(correction)
+
+    def align(self, obj, leftright, bottomtop):
+        self.align_to(obj, leftright)
+        self.align_to(obj, bottomtop)
+
+
+class OSVGMobject(SVGMobject):
+    def move_and_resize(self, offset, scale):
+        self.move_to(offset)
+        self.scale(scale)
+
+class OGroup(Group):
+    def move_and_resize(self, offset, scale):
+        self.move_to(offset)
+        self.scale(scale)

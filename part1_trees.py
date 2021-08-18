@@ -8,26 +8,6 @@ from util import ExternalLabeledDot, Tree
 from util import OScene
 
 
-class RotPolygon(Polygon):
-    def align_and_rotate(self, obj, leftright, bottomtop, rot):
-        self.rotate(rot)
-        self.align_to(obj, leftright)
-        self.align_to(obj, bottomtop)
-
-    def align(self, obj, leftright, bottomtop):
-        self.align_to(obj, leftright)
-        self.align_to(obj, bottomtop)
-
-
-class OSVGMobject(SVGMobject):
-    def move_and_resize(self, offset, scale):
-        self.move_to(offset)
-        self.scale(scale)
-
-class OGroup(Group):
-    def move_and_resize(self, offset, scale):
-        self.move_to(offset)
-        self.scale(scale)
 
 
 class TheBook(Scene):
@@ -98,6 +78,8 @@ class TheBook(Scene):
         # pak trojuhelniky
         tr_color = RED
 
+        pointedness = 0.00
+
         tr_botleft = RotPolygon([0, 0, 0], [a, 0, 0], [0, b, 0], color=tr_color)
         tr_botleft.align(outer_square, LEFT, DOWN)
 
@@ -122,23 +104,26 @@ class TheBook(Scene):
         self.play(
             ApplyMethod(tr_botleft.align_and_rotate, outer_square2, LEFT, DOWN, 0),
             ApplyMethod(
-                tr_botright.align_and_rotate, outer_square2, LEFT, DOWN, math.pi / 2
+                tr_botright.align_and_rotate, outer_square2, LEFT, DOWN, math.pi / 2, pointedness*UP
             ),
             ApplyMethod(
                 tr_topright.align_and_rotate, outer_square2, RIGHT, UP, -math.pi / 2
             ),
-            ApplyMethod(tr_topleft.align_and_rotate, outer_square2, RIGHT, UP, 0),
+            ApplyMethod(tr_topleft.align_and_rotate, outer_square2, RIGHT, UP, 0, pointedness*LEFT),
         )
         # self.play(MoveToTarget(tr_botright))
 
         # nakonec male ctverce
-        a_square = Square(side_length=a, color=inner_color)
+        thickness = 0.04
+        a_square = Square(side_length=a-thickness, color=inner_color)
         a_square.align_to(outer_square2, LEFT)
         a_square.align_to(outer_square2, UP)
+        a_square.shift((0,0,-1))
         a_square.set_fill(inner_color, opacity=1.0)
-        b_square = Square(side_length=b, color=inner_color)
+        b_square = Square(side_length=b-thickness, color=inner_color)
         b_square.align_to(outer_square2, RIGHT)
         b_square.align_to(outer_square2, DOWN)
+        a_square.shift((0,0,1))
         b_square.set_fill(inner_color, opacity=1.0)
 
         self.play(FadeIn(a_square), FadeIn(b_square))
@@ -183,6 +168,7 @@ class TheBook(Scene):
         
 
         # strom
+        time_scale = 2.0
         tree_scale = 2.0
         edge_scale = 0.5
         node_radius = 0.1
@@ -200,8 +186,13 @@ class TheBook(Scene):
             # labels=True
 
         )
-        self.add_foreground_mobjects(ex_tree)
-        ex_tree.move_to(offset2 + np.array((-0.5 * book_height_large, 0, 0)))
+        
+        #self.add_foreground_mobjects(ex_tree)
+        offset2_tree_start = offset2 + np.array((-0.5 * book_height_large, 0, 0))        
+        ex_tree.move_to(offset2_tree_start)
+        ex_tree.rot(offset2_tree_start, math.pi/2.0)
+        ex_tree.shift(1*RIGHT)
+
         self.play(Create(ex_tree))
 
         a = 5
@@ -218,27 +209,26 @@ class TheBook(Scene):
             custom_layers = {2: [12, 3, 13, 7, 15, 18]}
         )
 
-        self.play(ex_tree.animate.change_layout(a_hanging))
+        self.play(ex_tree.animate.change_layout(a_hanging), run_time = time_scale)
         self.play(ex_tree.animate.set_path_color(b, b, highlight_color))
 
         ex_tree2 = ex_tree.copy()
         b_hanging = ex_tree.hanging_position(
             b,
             b,
-            shift=offset2 + np.array((+0.25 * book_height_large, 0.5 * book_height_large, 0)),
+            shift=offset2 + np.array((+0.26 * book_height_large, 0.46 * book_height_large, 0)),
             scale=edge_scale,
             delta=5 * node_radius,
             custom_layers = {}
         )
 
-        self.play(ex_tree2.animate.set_path_color(a, a, highlight_color))
-
-        self.play(
-            ex_tree2.animate.set_path_color(a, a, base_color),
-            ex_tree2.animate.set_path_color(b, b, highlight_color),
-            ex_tree2.animate.change_layout(b_hanging),
+        #takle se to asi nema delat?
+        self.play(ex_tree2.animate.set_path_color(a, a, base_color), run_time=0)
+        self.play(ex_tree2.animate.set_path_color(b, b, highlight_color), run_time=0)
+        self.play(            
+            ex_tree2.animate.change_layout(b_hanging), run_time = time_scale
         )
-
+        self.wait(0.5)
         # self.play(ex_tree2.animate.set_path_color(c, c, highlight_color))
         self.play(ex_tree2.animate.set_path_color(b, c, highlight_color))
 
@@ -275,7 +265,7 @@ class TheBook(Scene):
 
         self.wait(1)
 
-        self.play(FadeOut(names), Unwrite(some_challenge))
+        self.play(FadeOut(names), Unwrite(some_challenge), run_time = 1)
 
         self.wait(10)
 
