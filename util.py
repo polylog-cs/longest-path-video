@@ -49,6 +49,8 @@ class Tree(Graph):
 
         return adj
 
+    
+
     def bfs(self, start):
         adj = self.get_adjacency_list()
 
@@ -124,6 +126,7 @@ class Tree(Graph):
         delta=0.3,
         scale=0.5,
         pinned_vertex=None,  # A vertex that should not change position
+        custom_layers = {}    # a dictionary containing the order of nodes in some layers
     ):
         if pinned_vertex is not None:
             original_pos = self[pinned_vertex].get_center()
@@ -158,6 +161,9 @@ class Tree(Graph):
         for i, v1 in enumerate(top):
             positions[v1] = np.array([i * 1.0 - len(top) / 2.0 + 0.5, 0.0, 0.0])
             weight(v1, top, 0)
+
+        for depth, order in custom_layers.items():
+            level_order[depth] = order
 
         # LP
         # variably:    n* x_i ... pozice na x-ove ose

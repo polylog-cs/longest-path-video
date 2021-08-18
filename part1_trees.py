@@ -19,41 +19,61 @@ class RotPolygon(Polygon):
         self.align_to(obj, bottomtop)
 
 
+class OSVGMobject(SVGMobject):
+    def move_and_resize(self, offset, scale):
+        self.move_to(offset)
+        self.scale(scale)
+
+class OGroup(Group):
+    def move_and_resize(self, offset, scale):
+        self.move_to(offset)
+        self.scale(scale)
+
+
 class TheBook(Scene):
     def construct(self):
-        erdos = ImageMobject("img/erdos.jpg")  # wiki
-        erdos.shift(5 * LEFT)
+        text_color = solarized.BASE00
+        erdos_img = ImageMobject("img/erdos.jpg")  # wiki
+        erdos_img.height = 4
+        erdos_desc = Tex(r"Paul Erd\"{o}s", color = text_color)
+        erdos = Group(erdos_img, erdos_desc).arrange(DOWN)
 
-        straight = Tex(r"Straight from the Book!", color=solarized.BASE00)
-        straight.shift(2 * UP)
+        erdos.shift(5 * LEFT)
+        erdos.shift(1.5 * UP)
 
         self.play(FadeIn(erdos))
-        self.play(Create(straight))
         self.wait(1)
-        # self.play(FadeOut(erdos), FadeOut(straight))
+
 
         #################################################################
 
-        # kniha
-        offset = np.array((-2.0, -2.0, -1))
-        book_height = 2.5
-        book = SVGMobject("img/open-book.svg", height=book_height)
+        # book reveal
+        offset = np.array((2.0, -0.5, -1))
+        offset_start = np.array((5.0, -2.0, -1))
+        offset_finish = offset_start - np.array((10, 0.5, 0))
+        book_height_large = 6.0
+        book_height_small = 2.5
+        book = OSVGMobject("img/open-book.svg", height=book_height_small)
         # http://www.clker.com/cliparts/I/O/x/x/4/8/open-book.svg
-        book.move_to(offset)
+        book.move_to(offset_start)
 
         self.play(FadeIn(book))
+
+
+        self.play(ApplyMethod(book.move_and_resize, offset, book_height_large / book_height_small))
+        # book travel
 
         # first square
 
         a = 5.0
         b = 12.0
-        scale = 0.5 * book_height / (a + b)
+        scale = 0.5 * book_height_large / (a + b)
         a *= scale
         b *= scale
         c = math.sqrt(a * a + b * b)
 
         # nejdriv vnejsi ctverce
-        outer_shift = np.array((0.28 * book_height, 0.0 * book_height, 0))
+        outer_shift = np.array((0.28 * book_height_large, 0.0 * book_height_large, 0))
         outer_color = GREEN
         outer_square = Square(side_length=(a + b), color=outer_color)
         outer_square.move_to(np.array(offset) - outer_shift)
@@ -123,19 +143,49 @@ class TheBook(Scene):
 
         self.play(FadeIn(a_square), FadeIn(b_square))
 
+        pythagoras = OGroup(outer_square,
+            outer_square2,
+            inner_square,
+            tr_botright,
+            tr_botleft,
+            tr_topleft,
+            tr_topright, 
+            a_square,
+            b_square)
+
+        math_book = OGroup(book, pythagoras)
+
+        ########################################################
+        # erdos mluvi, knizka zaleze
+        ########################################################
+        
+        straight = Tex(r"Straight from the Book!", color=text_color)
+        straight.shift(3 * UP)
+
+        self.play(Create(straight))
+        # self.play(FadeOut(erdos), FadeOut(straight))
+
+        self.play(ApplyMethod(math_book.move_and_resize, offset_finish, book_height_small / book_height_large))
+
+        ########################################################
+        # objevi se druha knizka, naleze doprostred, udela se v ni animace
         ########################################################
 
         # kniha
-        offset2 = offset + np.array((6, 0, 0))
-        book2 = SVGMobject("img/open-book.svg", height=book_height)
+        offset2_start = offset_start
+        book2 = OSVGMobject("img/open-book.svg", height=book_height_small)
         # http://www.clker.com/cliparts/I/O/x/x/4/8/open-book.svg
-        book2.move_to(offset2)
+        book2.move_to(offset2_start)
         self.play(FadeIn(book2))
 
+        offset2 = offset + np.array((0, 0, 0))
+        self.play(ApplyMethod(book2.move_and_resize, offset2, book_height_large / book_height_small))
+        
+
         # strom
-        tree_scale = 0.95
-        edge_scale = 0.2
-        node_radius = 0.05
+        tree_scale = 2.0
+        edge_scale = 0.5
+        node_radius = 0.1
         base_color = solarized.BASE00
         highlight_color = RED
 
@@ -146,14 +196,15 @@ class TheBook(Scene):
             layout_scale=tree_scale,
             vertex_config={"radius": node_radius, "color": base_color},
             labels=False,
-            edge_config={"color": base_color},
+            edge_config={"color": base_color}
             # labels=True
+
         )
         self.add_foreground_mobjects(ex_tree)
-        ex_tree.move_to(offset2 + np.array((-0.5 * book_height, 0, 0)))
+        ex_tree.move_to(offset2 + np.array((-0.5 * book_height_large, 0, 0)))
         self.play(Create(ex_tree))
 
-        a = 4
+        a = 5
         b = 10
         c = 20
 
@@ -161,9 +212,10 @@ class TheBook(Scene):
         a_hanging = ex_tree.hanging_position(
             a,
             a,
-            shift=offset2 + np.array((-0.25 * book_height, 0.4 * book_height, 0)),
+            shift=offset2 + np.array((-0.3 * book_height_large, 0.2 * book_height_large, 0)),
             scale=edge_scale,
-            delta=10 * node_radius,
+            delta=5 * node_radius,
+            custom_layers = {2: [12, 3, 13, 7, 15, 18]}
         )
 
         self.play(ex_tree.animate.change_layout(a_hanging))
@@ -173,10 +225,13 @@ class TheBook(Scene):
         b_hanging = ex_tree.hanging_position(
             b,
             b,
-            shift=offset2 + np.array((+0.25 * book_height, 0.4 * book_height, 0)),
+            shift=offset2 + np.array((+0.25 * book_height_large, 0.5 * book_height_large, 0)),
             scale=edge_scale,
-            delta=10 * node_radius,
+            delta=5 * node_radius,
+            custom_layers = {}
         )
+
+        self.play(ex_tree2.animate.set_path_color(a, a, highlight_color))
 
         self.play(
             ex_tree2.animate.set_path_color(a, a, base_color),
@@ -191,34 +246,38 @@ class TheBook(Scene):
         #   pokud bude separátní channel, tak jméno channelu,
         #   naznačit že mluví vašek v?, taky někde napsáno SoME challenge
 
+
+        ################################################################
+        # everything fades out, then names are displayed
+        ################################################################
+
         self.play(
             FadeOut(erdos),
-            FadeOut(straight),
-            FadeOut(book),
+            FadeOut(math_book),
             FadeOut(book2),
-            FadeOut(outer_square),
-            FadeOut(outer_square2),
-            FadeOut(inner_square),
-            FadeOut(tr_botright),
-            FadeOut(tr_botleft),
-            FadeOut(tr_topleft),
-            FadeOut(tr_topright),
+            FadeOut(straight),
             FadeOut(ex_tree),
-            FadeOut(ex_tree2),
-            FadeOut(a_square),
-            FadeOut(b_square),
+            FadeOut(ex_tree2)
         )
 
-        volhejn = Tex(r"Vaclav Volhejn", color=solarized.BASE00)
-        rozhon = Tex(r"Vaclav Rozhon", color=solarized.BASE00)
-        rozhon.shift(2 * DOWN + 4 * RIGHT)
-        volhejn.shift(3 * DOWN + 4 * RIGHT)
-        # dodelat right bottom align
+        volhejn = Tex(r"Vaclav Volhejn", color=text_color)
+        rozhon = Tex(r"Vasek Rozhon", color=text_color)
+        names = Group(rozhon, volhejn).arrange(DOWN)
+        names.shift(2 * DOWN + 4 * RIGHT)
+        volhejn.align_to(names, RIGHT)
+        rozhon.align_to(names, RIGHT)
+        
+        some_highlight_color = RED
+        some_challenge = MarkupText(f'<span fgcolor="{some_highlight_color}">S</span>ummer <span fgcolor="{some_highlight_color}">o</span>f <span fgcolor="{some_highlight_color}">M</span>ath<span fgcolor="{some_highlight_color}"> E</span>xposition <span fgcolor="{some_highlight_color}">1</span>', color=text_color)
+        some_challenge.shift(1 * LEFT)
 
-        self.play(FadeIn(rozhon), FadeIn(volhejn))
+        self.play(FadeIn(names), Write(some_challenge))
+
+        self.wait(1)
+
+        self.play(FadeOut(names), Unwrite(some_challenge))
 
         self.wait(10)
-
 
 class TreeIntro(OScene):
     def construct(self):
