@@ -11,7 +11,7 @@ class Tree(Graph):
     def __init__(self, *args, label_class=Text, **kwargs):
         # Hack to fix "labels=True" when TeX is not available
         # (uses `Text` instead of `MathTex`)
-        if kwargs.get("labels") == True:
+        if kwargs.get("labels") == True and False: #sorryjako
             # Assumes vertices are positional arg
             assert "vertices" not in kwargs
             labels = dict(

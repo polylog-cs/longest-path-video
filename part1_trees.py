@@ -485,7 +485,7 @@ class TreeExamples(Scene):
         file_a = "/Documents/ETH/Thesis"
         file_b = "/Downloads"
 
-        anim1, anim2 = file_tree.path_animation(file_a, file_b)
+        anim1, anim2 = file_tree.path_animation(file_a, file_b, color=RED)
         self.play(anim1)
         self.wait(1)
         self.play(anim2)

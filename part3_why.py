@@ -284,3 +284,58 @@ class EvenCase(Scene):
 
         self.play(self.g.animate.set_path_color(32, 34))
         self.wait()
+
+
+class Outro(Scene):
+    def construct(self):
+        self.g = Tree(
+            tree_data.even_example_vertices,
+            tree_data.even_example_edges,
+            layout="kamada_kawai",
+            layout_scale=3.5,
+            vertex_config={
+                # "radius": 0.2,
+                "color": solarized.BASE00
+            },
+            edge_config={"color": solarized.BASE00},
+            #labels=True,
+        )
+
+        hanging = self.g.hanging_position(1, 5, shift=UP, scale=1.0)
+        self.g.change_layout(hanging)
+
+        self.play(Create(self.g), run_time = 0.1)
+        self.wait()        
+
+
+        va, vb= 65, 21
+        self.g2 = Tree(
+            tree_data.example_vertices,
+            tree_data.example_edges,
+            layout="kamada_kawai",
+            layout_scale=3.5,
+            vertex_config={
+                # "radius": 0.2,
+                "color": solarized.BASE00
+            },
+            edge_config={"color": solarized.BASE00},
+            #labels=True,
+        )
+
+        hanging = self.g2.hanging_position(va, vb, shift=3*RIGHT+0*DOWN, scale=0.7)
+        self.g2.change_layout(hanging)
+
+        self.play(ApplyMethod(self.g.shift, 4*LEFT+1*DOWN), Create(self.g2), run_time = 1)
+        
+        even_paths = [(1, 5),  (32, 34), (5,20), (33, 1)]
+        odd_paths  = [(65, 21),(56,46),  (10,64),(44,80)]
+
+        for i in range(len(even_paths)):
+            anim_l1, anim_l2 = self.g.path_animation(even_paths[i][0], even_paths[i][1], color=RED)
+            anim_r1, anim_r2 = self.g2.path_animation(odd_paths[i][0], odd_paths[i][1], color=RED)
+    
+            self.play(anim_l1, anim_r1)
+            self.wait()
+            self.play(anim_l2, anim_r2)
+
+        self.wait(10)
