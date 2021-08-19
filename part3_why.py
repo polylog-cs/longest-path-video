@@ -288,6 +288,7 @@ class EvenCase(Scene):
 
 class Outro(Scene):
     def construct(self):
+        base_color = solarized.BASE00
         self.g = Tree(
             tree_data.even_example_vertices,
             tree_data.even_example_edges,
@@ -342,15 +343,20 @@ class Outro(Scene):
         
         # paths are lighting up
 
-        even_paths = [(1, 5),  (32, 34), (5,20), (33, 1)]
-        odd_paths  = [(65, 21),(56,46),  (10,64),(44,80)]
-
-        txt = Tex(r"In the middle of all longest paths")
-        txt.shift(1*UP)
-        #ar1
-        self.play(Create(txt))
+        txt = Tex(r"In the middle of all longest paths", color = base_color)
+        txt.shift(2*UP)
+        
+        st = np.array((-3, 2, 0))
+        en = np.array((-4, 0.1, 0))
+        st2 = np.array((2, 2, 0))
+        en2 = np.array((3, 0.1, 0))
+        ar1 = Arrow(start = st, end = en, color = base_color)
+        ar2 = Arrow(start = st2, end = en2, color = base_color)
+        self.play(Create(txt), Create(ar1), Create(ar2))
 
         '''
+        even_paths = [(1, 5),  (32, 34), (5,20), (33, 1)]
+        odd_paths  = [(65, 21),(56,46),  (10,64),(44,80)]
         for i in range(len(even_paths)):
             t = 0.1
             anim_l1, anim_l2 = self.g.path_animation(even_paths[i][0], even_paths[i][1], time_per_step = t*1.9, color=RED, rect=(l_c, rec1, rec2))
@@ -361,5 +367,13 @@ class Outro(Scene):
             self.play(anim_l2, anim_r2)
         '''
 
+        self.wait()
+        self.play(Uncreate(txt), Uncreate(self.g), Uncreate(self.g2), Uncreate(ar1), Uncreate(ar2), Uncreate(rec1), Uncreate(rec2))
 
+        txt_fs = Tex(r"The actual longest path in Vaclav's filesystem", color = base_color)
+        txt_fs.shift(2*UP)
+        self.play(Create(txt_fs))
+
+        self.wait()
+        self.play(Uncreate(txt_fs))
         self.wait(10)

@@ -340,14 +340,12 @@ class TreeIntro(OScene):
         self.play(self.T.animate.remove_edges((1, 8)))
 
         self.play(
-            self.T.animate.set_path_color(1, 1, solarized.RED),
-            self.T.animate.set_path_color(8, 8, solarized.RED),
+            self.T.animate.set_colors(vertex_colors = {1: solarized.RED, 8: solarized.RED})
         )
 
         self.wait(1)
         self.play(
-            self.T.animate.set_path_color(1, 1, base_color),
-            self.T.animate.set_path_color(8, 8, base_color),
+            self.T.animate.set_colors(vertex_colors = {1: solarized.BASE00, 8: solarized.BASE00})
         )
 
         self.wait(10)
@@ -389,7 +387,7 @@ class TreeExamples(Scene):
             # labels=labels,
             vertex_type=ExternalLabeledDot,
             labels=True,
-            label_class=Text,
+            #label_class=Text,
         )
 
         for v in file_tree.vertices:

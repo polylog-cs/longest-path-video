@@ -1,0 +1,43 @@
+jméno
+- NPrime    N'
+- O(log n)
+- sublinear
+- the upper bound (lower)
+- amortised
+
+thumbnail
+- drake meme? (copyright!)
+
+
+bublina u erdose
+- bud nedat ten text vubec
+- nebo se pokusit adaptovat mirkuv kod
+- jak to vypadá když to vyjede z pusy?
+
+zeptat se na discordu na copyright
+
+grafy se zobrazují divně přes obrázky (!)
+
+změnit vaška na václava
+
+přidat název kanálu, hodit some doleva
+
+sjednotit font, barvy
+
+u file systému přejít zpátky k černé ne šedé
+
+udělat flash u bakterie dvou podobných vrcholů
+
+osnova větší font
+
+změnit barvu stromu / silnější hrany?
+
+
+Vašek V
+
+potřeba u kvadratického alg. dodělat jak to vypadá když to skončí (vyznačit na konci největší čísla?)
+
+
+self.play(x.animate.shift(RIGHT).scale(2))
+
+-s renderuje jen posledni snimek
