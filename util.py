@@ -37,8 +37,7 @@ class Tree(Graph):
             new_layout[u] = np.array( \
                 (pos_u[0] * math.cos(theta) + pos_u[1] * math.sin(theta), \
                 pos_u[1] * math.cos(theta) - pos_u[0] * math.sin(theta), \
-                pos_u[2])\
-                )
+                pos_u[2]))
             new_layout[u] += mid
         self.change_layout(new_layout)
 
@@ -225,6 +224,12 @@ class Tree(Graph):
             positions[k] += shift
 
         return positions
+
+    #pls implement
+    def path_animation(self, start, end, color=solarized.RED, base_color=solarized.BASE00):
+        path = self.get_path(start, end)
+        return (self.animate.set_path_color(start, end, color), \
+            self.animate.set_path_color(start, end, base_color))
 
     def bfs_animation(
         self,

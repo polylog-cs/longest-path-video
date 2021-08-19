@@ -4,8 +4,7 @@ import math
 
 import solarized
 import tree_data
-from util import ExternalLabeledDot, Tree
-from util import OScene
+from util import *
 
 
 
@@ -278,10 +277,11 @@ class TreeIntro(OScene):
 
         # https://illustoon.com/?dl=383
         tree = ImageMobject("img/tree.png")
-        tree.shift(np.array((3, 0, 0)))
+        tree.shift(np.array((3, 0, -100)))
+        tree.set_opacity(0.5)
         vertices, edges, positions = parse_tree_tree()
 
-        self.g = Tree(
+        self.T = Tree(
             vertices,
             edges,
             layout="kamada_kawai",
@@ -293,10 +293,10 @@ class TreeIntro(OScene):
             layout_config={"center": (-5, 0)},
         )
 
-        # for k,v in self.g.positions:
-        #    self.g.layout[k] = v * 0.5 + np.array((3,0,0))
+        # for k,v in self.T.positions:
+        #    self.T.layout[k] = v * 0.5 + np.array((3,0,0))
 
-        self.play(Create(self.g))
+        self.play(Create(self.T))
 
         self.wait(1)
 
@@ -310,7 +310,7 @@ class TreeIntro(OScene):
         for k, v in positions.items():
             v -= delta
 
-        self.play(self.g.animate.change_layout(positions))
+        self.play(self.T.animate.change_layout(positions))
         self.wait(1)
         self.play(FadeOut(tree))
 
@@ -320,40 +320,40 @@ class TreeIntro(OScene):
         # [vyznačí se dva vrcholy a pak cesta mezi nimi]
 
         extra_edge = Line(
-            self.g[6].get_center(), self.g[22].get_center(), color=solarized.RED
+            self.T[6].get_center(), self.T[22].get_center(), color=solarized.RED
         )
 
         self.play(Create(extra_edge))
         self.wait(1)
 
         self.wait(1)
-        self.play(self.g.animate.set_path_color(6, 22, solarized.RED))
+        self.play(self.T.animate.set_path_color(6, 22, solarized.RED))
 
         self.wait(1)
         self.play(
-            Uncreate(extra_edge), self.g.animate.set_path_color(6, 22, solarized.BASE00)
+            Uncreate(extra_edge), self.T.animate.set_path_color(6, 22, solarized.BASE00)
         )
         self.wait(1)
 
-        self.play(self.g.animate.remove_edges((1, 8)))
+        self.play(self.T.animate.remove_edges((1, 8)))
 
         self.play(
-            self.g.animate.set_path_color(1, 1, solarized.RED),
-            self.g.animate.set_path_color(8, 8, solarized.RED),
+            self.T.animate.set_path_color(1, 1, solarized.RED),
+            self.T.animate.set_path_color(8, 8, solarized.RED),
         )
 
         self.wait(1)
         self.play(
-            self.g.animate.set_path_color(1, 1, base_color),
-            self.g.animate.set_path_color(8, 8, base_color),
+            self.T.animate.set_path_color(1, 1, base_color),
+            self.T.animate.set_path_color(8, 8, base_color),
         )
 
         self.wait(10)
-        self.play(FadeOut(tree, self.g))
-
+        self.play(FadeOut(tree, self.T))
 
 class TreeExamples(Scene):
     def construct(self):
+        text_color = solarized.BASE00
         edges = tree_data.parse_linux_tree("fictional_filesystem.txt")
 
         vertices = set()
@@ -393,7 +393,7 @@ class TreeExamples(Scene):
         for v in file_tree.vertices:
             file_tree[v].reposition_label(file_tree, v)
 
-        # self.play(DrawBorderThenFill(g))
+        # self.play(DrawBorderThenFill(Gbacteria))
         self.play(Create(file_tree))
         self.wait(1)
 
@@ -403,42 +403,95 @@ class TreeExamples(Scene):
 
         # bacteria
 
+        bacteria_mid_point = np.array((3, 0, 0))
         vertices, edges, positions, a, b, a2, b2, leaves = parse_bacteria_tree(
-            shift=(3, 0, 0)
+            shift = bacteria_mid_point
         )
         base_color = solarized.BASE00
+        bac_highlight_color = RED
         node_radius = 0.05
         # labels = dict((v, Text(str(v), fill_color=BLACK, size=0.15)) for v in vertices)
-        g = Tree(
+        Gbacteria = Tree(
             vertices,
             edges,
             layout=positions,  # "kamada_kawai",
-            # labels=True,
+            labels=False,
             vertex_config={"radius": node_radius, "color": base_color},
             edge_config={"color": base_color},
         )
 
-        self.play(Create(g))
+        self.play(Create(Gbacteria))
         self.wait(1)
 
         c = 67
-        d = 85
-        self.wait(1)
-        self.play(g.animate.set_path_color(c, d, RED))
-        self.play(g.animate.set_path_color(c, d, base_color))
+        d = 68
 
         self.wait(1)
 
-        self.play(g.animate.set_colors(dict((v, solarized.GREEN) for v in leaves)))
+        
+        self.play(Gbacteria.animate.set_colors(dict((v, solarized.GREEN) for v in leaves)))
+        self.wait(1)
+        self.play(Gbacteria.animate.set_colors(dict((v, base_color) for v in leaves)))
+        self.wait(1)
+        '''
+        
+        '''
+        self.play(Gbacteria.animate.set_colors({c: bac_highlight_color, d: bac_highlight_color}))
+        self.play(Gbacteria.animate.set_path_color(c, d, bac_highlight_color))
+        self.play(Gbacteria.animate.set_path_color(c, d, base_color))
+        '''        
+
+        '''
+        self.play(Gbacteria.animate.set_path_color(a, b))
         self.wait(1)
 
-        self.play(g.animate.set_path_color(a, b))
+        self.play(Gbacteria.animate.rot(bacteria_mid_point, 47.0/360.0*(2*math.pi)))
+
+        sc = 0.3
+        dlt = 0.3
+        self.wait(1)
+        bact_hanging_position = Gbacteria.hanging_position(\
+            start = a, \
+            end = b, \
+            shift = bacteria_mid_point, \
+            delta = dlt, \
+            scale = sc \
+            )
+        self.play(Gbacteria.animate.change_layout(bact_hanging_position), run_time = 2)
         self.wait(1)
 
-        self.play(g.animate.set_path_color(a2, b2, solarized.BLUE))
+        txt_diameter = Tex(r"Diameter", color = text_color)
+        txt_diameter.move_to(np.array((3,1.5,0)))
+        seg_mid = Line(Gbacteria.vertices[a].get_center() + np.array((0,1,0)), Gbacteria.vertices[b].get_center() + np.array((0,1,0)))
+        l = 0.3
+        seg_left= Line(seg_mid.get_start() + np.array((0,l,0)), seg_mid.get_start() + np.array((0,-l,0)))
+        seg_right= Line(seg_mid.get_end() + np.array((0,l,0)), seg_mid.get_end() + np.array((0,-l,0)))
+        seg = Group(seg_left, seg_mid, seg_right)
+        
+        self.play(Write(txt_diameter), FadeIn(seg))
+
+        self.play(Gbacteria.animate.set_path_color(a2, b2, solarized.BLUE))
 
         self.wait(1)
-        self.play(FadeOut(g), FadeOut(file_tree))
+        bact_hanging_position2 = Gbacteria.hanging_position(\
+            start = a2, \
+            end = b2, \
+            shift = bacteria_mid_point, \
+            delta = dlt, \
+            scale = sc \
+            )
+        self.play(Gbacteria.animate.change_layout(bact_hanging_position2), run_time = 2)
+               
+        file_a = "/Documents/ETH/Thesis"
+        file_b = "/Downloads"
+
+        anim1, anim2 = file_tree.path_animation(file_a, file_b)
+        self.play(anim1)
+        self.wait(1)
+        self.play(anim2)
+
+        self.wait(1)
+        self.play(FadeOut(Gbacteria), FadeOut(file_tree), FadeOut(txt_diameter), FadeOut(seg))
         self.wait(10)
 
 
