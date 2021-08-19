@@ -1,6 +1,8 @@
 from manim import *
+from manim.utils import tex
 import numpy as np
 import math
+import textwrap
 
 import solarized
 import tree_data
@@ -387,7 +389,7 @@ class TreeExamples(Scene):
             # labels=labels,
             vertex_type=ExternalLabeledDot,
             labels=True,
-            label_class=Tex,
+            label_class=Text,
         )
 
         for v in file_tree.vertices:
@@ -399,7 +401,29 @@ class TreeExamples(Scene):
 
         self.play(file_tree.animate.shift(LEFT * 4).scale(0.6))
 
-        # TODO (VV): nejak ukazat jako vystup prikazu `tree`?
+        filesystem_str = textwrap.dedent(
+            """
+            ├── Documents
+            │   ├── Books
+            │   ├── ETH
+            │   │   ├── Notes
+            │   │   └── Thesis
+            │   └── SoME1
+            ├── Downloads
+            ├── Movies
+            └── Pictures
+            """
+        )
+
+        filesystem_text = (
+            Text(filesystem_str, color=solarized.BASE00).scale(0.8).shift(RIGHT * 3)
+        )
+
+        self.wait()
+        self.play(Create(filesystem_text))
+        self.wait(3)
+        self.play(Uncreate(filesystem_text))
+        self.wait()
 
         # bacteria
 
