@@ -226,10 +226,26 @@ class Tree(Graph):
         return positions
 
     #pls implement
-    def path_animation(self, start, end, color=solarized.RED, base_color=solarized.BASE00):
+    def path_animation(self, start, end, time_per_step=0.5, color=solarized.RED, base_color=solarized.BASE00, rect=None):
         path = self.get_path(start, end)
-        return (self.animate.set_path_color(start, end, color), \
-            self.animate.set_path_color(start, end, base_color))
+        
+        vertices = []
+        edges = []
+        prev = -42
+        for u in path:
+            vertices.append([u])
+            if prev != -42:
+                edges.append([(prev, u)])
+            prev = u
+        edges.append([])
+        #print(vertices)
+        #print(edges)
+        return self.bfs_animation(start, \
+            time_per_step = time_per_step, \
+            override_layers = (vertices, edges), \
+            annotations = False,\
+            blinking = False, \
+            rect = rect)
 
     def bfs_animation(
         self,
@@ -238,6 +254,8 @@ class Tree(Graph):
         time_per_step=0.5,
         override_layers=None,  # Použije tyhle data místo bfs
         annotations=True,
+        blinking=True,
+        rect = None,
     ):
         color = solarized.MAGENTA
 
@@ -258,6 +276,7 @@ class Tree(Graph):
         to_unhighlight = []
 
         anims_next = []
+        trigger_was_used = False
         for i in range(len(v_layers)):
             anims = anims_next
             anims_next = []
@@ -272,10 +291,20 @@ class Tree(Graph):
                 temp_mobjects.append(progress_line)
                 anims.append(Create(progress_line, rate_func=linear))
 
+            
             for v in v_layers[i]:
-                anims_next.append(
-                    Flash(self[v], color=solarized.BASE1, time_width=0.25)
-                )
+                if blinking == True:
+                    anims_next.append(
+                        Flash(self[v], color=solarized.BASE1, time_width=0.25)
+                    )
+                if rect != None and trigger_was_used == False:
+                    trigger_node, obj1, obj2 = rect
+                    if v == trigger_node:
+                        anims_next.extend([
+                            Indicate(obj1, color = solarized.BASE1, run_time=2),
+                            Indicate(obj2, color = solarized.BASE1, run_time=2)
+                        ])
+                        trigger_was_used = True
 
                 anims.append(ApplyFunction(vertex_on, self[v]))
 

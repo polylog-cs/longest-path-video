@@ -327,15 +327,39 @@ class Outro(Scene):
 
         self.play(ApplyMethod(self.g.shift, 4*LEFT+1*DOWN), Create(self.g2), run_time = 1)
         
+        # rectangles appear
+
+        l_c = 3
+        r_c = [4, 5]
+
+        rec1 = Rectangle(height=0.5, width=1.0, color=solarized.GREEN).move_to(
+            self.g[l_c].get_center()
+        )
+        rec2 = Rectangle(height=0.5, width=1.5, color=solarized.GREEN).move_to(
+            (self.g2[r_c[0]].get_center()+self.g2[r_c[1]].get_center())/2.0
+        )
+        self.play(Create(rec1), Create(rec2))
+        
+        # paths are lighting up
+
         even_paths = [(1, 5),  (32, 34), (5,20), (33, 1)]
         odd_paths  = [(65, 21),(56,46),  (10,64),(44,80)]
 
+        txt = Tex(r"In the middle of all longest paths")
+        txt.shift(1*UP)
+        #ar1
+        self.play(Create(txt))
+
+        '''
         for i in range(len(even_paths)):
-            anim_l1, anim_l2 = self.g.path_animation(even_paths[i][0], even_paths[i][1], color=RED)
-            anim_r1, anim_r2 = self.g2.path_animation(odd_paths[i][0], odd_paths[i][1], color=RED)
+            t = 0.1
+            anim_l1, anim_l2 = self.g.path_animation(even_paths[i][0], even_paths[i][1], time_per_step = t*1.9, color=RED, rect=(l_c, rec1, rec2))
+            anim_r1, anim_r2 = self.g2.path_animation(odd_paths[i][0], odd_paths[i][1], time_per_step = t, color=RED)
     
             self.play(anim_l1, anim_r1)
             self.wait()
             self.play(anim_l2, anim_r2)
+        '''
+
 
         self.wait(10)
