@@ -8,7 +8,6 @@ jméno
 thumbnail
 - drake meme? (copyright!)
 
-
 bublina u erdose
 - bud nedat ten text vubec
 - nebo se pokusit adaptovat mirkuv kod
@@ -18,9 +17,9 @@ zeptat se na discordu na copyright
 
 grafy se zobrazují divně přes obrázky (!)
 
-změnit vaška na václava
+check ze to trva days, mozna hours to days
 
-přidat název kanálu, hodit some doleva
+pridat do fyzikalni simulace bfsko
 
 sjednotit font, barvy
 
@@ -32,6 +31,11 @@ osnova větší font
 
 změnit barvu stromu / silnější hrany?
 
+explaining algorithms using metaphors
+
+pokusit se "přidat a umazat šipky" u file systému
+
+jaký je diam bakteriového stromu?
 
 Vašek V
 
@@ -40,4 +44,17 @@ potřeba u kvadratického alg. dodělat jak to vypadá když to skončí (vyzna�
 
 self.play(x.animate.shift(RIGHT).scale(2))
 
+rozložit strom na kamada-kawai a pak až znova najít "existenční" nejdelší cestu
+
+v bfs se nezobrazí jednička
+
+občas se čísla v bfs zobrazí jinak
+
+úvod animace se spoustou stromů aby to bylo víc smooth
+
 -s renderuje jen posledni snimek
+
+
+
+----------------
+self.play(DrawBorderThenFill(ex_tree))

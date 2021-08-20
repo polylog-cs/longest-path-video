@@ -218,7 +218,7 @@ class TheBook(Scene):
 
         # self.play(Create(ex_tree))
         self.play(DrawBorderThenFill(ex_tree))
-        return
+        
 
         a = 5
         b = 10
@@ -253,10 +253,10 @@ class TheBook(Scene):
         self.play(ex_tree2.animate.set_path_color(a, a, base_color), run_time=0)
         self.play(ex_tree2.animate.set_path_color(b, b, highlight_color), run_time=0)
         self.play(ex_tree2.animate.change_layout(b_hanging), run_time=time_scale)
-        self.wait(0.5)
         # self.play(ex_tree2.animate.set_path_color(c, c, highlight_color))
         self.play(ex_tree2.animate.set_path_color(b, c, highlight_color))
-
+        self.play(ex_tree2.animate.change_layout(b_hanging), run_time=time_scale)
+        
         # TODO: animace s našimi jmény - Vašek ® a Václav (V),
         #   pokud bude separátní channel, tak jméno channelu,
         #   naznačit že mluví vašek v?, taky někde napsáno SoME challenge
@@ -265,17 +265,20 @@ class TheBook(Scene):
         # everything fades out, then names are displayed
         ################################################################
 
+        self.play(FadeOut(Group(math_book, book2, erdos, ex_tree, ex_tree2, straight)))
+        
+        '''            
         self.play(
+            FadeOut(book2),
+            FadeOut(ex_tree),
             FadeOut(erdos),
             FadeOut(math_book),
-            FadeOut(book2),
             FadeOut(straight),
-            FadeOut(ex_tree),
-            FadeOut(ex_tree2),
-        )
+            FadeOut(ex_tree2),            
+        )'''
 
         volhejn = Tex(r"Vaclav Volhejn", color=text_color)
-        rozhon = Tex(r"Vasek Rozhon", color=text_color)
+        rozhon = Tex(r"Vaclav Rozhon", color=text_color)
         names = Group(rozhon, volhejn).arrange(DOWN)
         names.shift(2 * DOWN + 4 * RIGHT)
         volhejn.align_to(names, RIGHT)
@@ -285,15 +288,16 @@ class TheBook(Scene):
         some_challenge = MarkupText(
             f'<span fgcolor="{some_highlight_color}">S</span>ummer <span fgcolor="{some_highlight_color}">o</span>f <span fgcolor="{some_highlight_color}">M</span>ath<span fgcolor="{some_highlight_color}"> E</span>xposition <span fgcolor="{some_highlight_color}">1</span>',
             color=text_color,
+            size = 0.7
         )
-        some_challenge.shift(1 * LEFT)
-
-        self.play(FadeIn(names), Write(some_challenge))
+        some_challenge.shift(2 * LEFT + 2 * DOWN)
+        channel_name = Tex(r"Channel Name", color = text_color)
+        channel_name.shift(1*UP)
+        self.play(FadeIn(names), FadeIn(channel_name), Write(some_challenge))
 
         self.wait(1)
 
-        self.play(FadeOut(names), Unwrite(some_challenge), run_time=1)
-
+        self.play(FadeOut(names), Unwrite(some_challenge), FadeOut(channel_name), run_time=1)
         self.wait(10)
 
 
@@ -321,13 +325,13 @@ class TreeIntro(OScene):
             edge_config={"color": solarized.BASE00},
             # Passed to:
             # https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.kamada_kawai_layout.html
-            layout_config={"center": (-5, 0)},
-        )
+            layout_config={"center": (-4, 0)},
+        ).scale(1.2)
 
         # for k,v in self.T.positions:
         #    self.T.layout[k] = v * 0.5 + np.array((3,0,0))
 
-        self.play(Create(self.T))
+        self.play(DrawBorderThenFill(self.T))
 
         self.wait(1)
 
@@ -345,7 +349,7 @@ class TreeIntro(OScene):
         self.play(self.T.animate.change_layout(positions))
         self.play(self.T.animate.change_layout(positions), run_time=3)
 
-        self.play(FadeOut(tree))
+        self.play(FadeOut(tree), run_time = 0.1)
 
         # This means that in a tree, you can walk from every node to every other node
         # using the connections between nodes,
@@ -356,6 +360,8 @@ class TreeIntro(OScene):
             self.T[6].get_center(), self.T[22].get_center(), color=solarized.RED
         )
 
+        self.play(self.T.animate.set_colors({6: solarized.RED, 22: solarized.RED}))
+        self.wait(1)
         self.play(Create(extra_edge))
         self.wait(1)
 
@@ -368,19 +374,21 @@ class TreeIntro(OScene):
         )
         self.wait(1)
 
-        self.play(self.T.animate.remove_edges((1, 8)))
-
         self.play(
             self.T.animate.set_colors(vertex_colors = {1: solarized.RED, 8: solarized.RED})
         )
+        self.wait(1)
+        self.play(self.T.animate.remove_edges((1, 8)))
+
 
         self.wait(1)
         self.play(
             self.T.animate.set_colors(vertex_colors = {1: solarized.BASE00, 8: solarized.BASE00})
         )
+        self.wait(1)
 
+        self.play(FadeOut(self.T))
         self.wait(10)
-        self.play(FadeOut(tree, self.T))
 
 
 class TreeExamples(Scene):

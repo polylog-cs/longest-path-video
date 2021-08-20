@@ -412,10 +412,13 @@ class ExternalLabeledDot(Dot):
 class OScene(Scene):
     def outline(self, part):
         greyish = solarized.BASE00
+        size = 1
         outline_list = [
-            Tex("1) Trees", color=greyish),
-            Tex("2) The algorithm", color=greyish),
-            Tex("3) Why it works", color=greyish),
+            MarkupText(f"1) Trees", color=greyish, size = size),
+            MarkupText(f" ", color=greyish, size = size/2),
+            MarkupText(f"2) The algorithm", color=greyish, size = size),
+            MarkupText(f" ", color=greyish, size = size/2),
+            MarkupText(f"3) Why it works", color=greyish, size = size),
         ]
 
         full_list = VGroup(*outline_list).arrange(DOWN)
@@ -425,7 +428,7 @@ class OScene(Scene):
 
         self.play(FadeIn(full_list))
 
-        self.play(Indicate(outline_list[part - 1], color=solarized.YELLOW))
+        self.play(Indicate(outline_list[2*part - 2], color=solarized.YELLOW))
         self.wait()
 
         self.play(FadeOut(full_list))
