@@ -20,6 +20,11 @@ class TheBook(Scene):
         erdos.shift(5 * LEFT)
         erdos.shift(1.5 * UP)
 
+        erdos_img_wink = ImageMobject("img/erdos_wink.jpg")  # wiki
+        erdos_img_wink.height = erdos_img.height
+        erdos_img_wink.align_to(erdos_img, LEFT)
+        erdos_img_wink.align_to(erdos_img, UP)
+        
         self.play(FadeIn(erdos))
         self.wait(1)
 
@@ -255,7 +260,14 @@ class TheBook(Scene):
         self.play(ex_tree2.animate.change_layout(b_hanging), run_time=time_scale)
         # self.play(ex_tree2.animate.set_path_color(c, c, highlight_color))
         self.play(ex_tree2.animate.set_path_color(b, c, highlight_color))
-        self.play(ex_tree2.animate.change_layout(b_hanging), run_time=time_scale)
+        
+        #erdos winks
+        wink_time = 0.1
+        self.play(FadeIn(erdos_img_wink), run_time = wink_time)
+        self.play(ex_tree2.animate.change_layout(b_hanging), run_time= wink_time)
+        self.play(FadeOut(erdos_img_wink), run_time = wink_time)
+
+        self.play(ex_tree2.animate.change_layout(b_hanging), run_time= 0.5)
         
         # TODO: animace s našimi jmény - Vašek ® a Václav (V),
         #   pokud bude separátní channel, tak jméno channelu,

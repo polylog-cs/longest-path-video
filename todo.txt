@@ -8,13 +8,6 @@ jméno
 polylog? 
 něco s the book?
 
-thumbnail
-- drake meme? (copyright!)
-
-
-
-
-
 
 při vysvětlování complexity udělat nový slide, kde je něco jako:
 one starting node: n operations
@@ -23,14 +16,7 @@ svorka: n^2 operations
 
 v popisu algoritmu dát znova modrou ne červenou
 
-když se zobrazí node mimo trojúhelník, tak by se měl znova zobrazit trojúhelník
-
-
-
 zeptat se na discordu na copyright
-
-
-pridat do fyzikalni simulace bfsko
 
 sjednotit font, barvy
 
@@ -48,15 +34,13 @@ trojúhelník by se měl zvětšovat po částech
 
 self.play(x.animate.shift(RIGHT).scale(2))
 
-rozložit strom na kamada-kawai a pak až znova najít "existenční" nejdelší cestu
-
 v bfs se nezobrazí jednička
 
 občas se čísla v bfs zobrazí jinak
 
 úvod animace se spoustou stromů aby to bylo víc smooth
 
--s renderuje jen posledni snimek
+
 
 
 
@@ -65,8 +49,6 @@ nedůležitá todo
 
 bublina u erdose
 
-
-umi erdos mrkat?
 
 kdyz se pisou texty tak at vsechny skonci nastejno
 
@@ -86,3 +68,4 @@ změnit barvu stromu / silnější hrany?
 --------------
 strom alg 64 0
 strom analyza 21 9
+-s renderuje jen posledni snimek

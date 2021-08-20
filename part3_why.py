@@ -64,33 +64,38 @@ class Triangle(Scene):
             layout_scale=3.5,
             vertex_config={"color": solarized.BASE00},
             edge_config={"color": solarized.BASE00},
-            labels=True,
+            #labels=True,
         )
         hanging = self.g.hanging_position(b1, c1, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
 
         self.play(Create(self.g))
+        self.play(self.g.animate.set_path_color(b1, c1, solarized.RED))
         self.wait()
 
-        tleft = hanging[b1]
-        tright = hanging[c1]
+        eps = 0.1
+        tleft = hanging[b1]+2*eps*LEFT+eps*UP
+        tright = hanging[c1]+2*eps*RIGHT+eps*UP
         tmid = (tleft + tright) / 2.0
-        tbot = tmid - [(tmid - tleft)[1], (tmid - tleft)[0], 0]
+        tbot = tmid - [(tmid - tleft)[1], (tmid - tleft)[0], 0] + (4/1.4 -1)*eps*DOWN
 
         def flash_triangle():
             ltop = Line(tright, tleft, color=solarized.GREEN)
             lleft = Line(tleft, tbot, color=solarized.GREEN)
             lright = Line(tbot, tright, color=solarized.GREEN)
-            self.play(Create(ltop), Create(lleft), Create(lright), time=2)
+            self.play(Create(ltop), Create(lleft), Create(lright), self.g.animate.set_path_color(b1, c1, solarized.RED), time=2)
             self.wait(1)
             self.play(Uncreate(ltop), Uncreate(lleft), Uncreate(lright), time=2)
             self.wait(1)
 
         flash_triangle()
 
-        self.play(self.g.animate.change_layout("kamada_kawai"))
+        self.play(self.g.animate.change_layout("kamada_kawai", layout_scale = 1.5))
         self.wait(1)
 
+        self.play(self.g.animate.set_path_color(b1, c1, solarized.BASE00))
+
+        self.wait(1)
         self.play(self.g.animate.set_path_color(b2, c2))
         self.wait(1)
 
@@ -161,9 +166,12 @@ class Triangle(Scene):
 
         self.play(Create(Grot), run_time = 0.1)
         self.play(Rotate(Grot, math.pi/2, about_point = Grot.vertices[6].get_center()))
-
+        self.wait()
+        self.play(Rotate(Grot, -math.pi/2, about_point = Grot.vertices[6].get_center()))
         self.wait()
 
+        self.play(self.g.animate.remove_edges((64, 100)))
+        self.play(self.g.animate.remove_vertices(100), run_time=0.1)
         self.play(self.g.animate.set_colors_all(), Uncreate(ltop), Uncreate(lleft), Uncreate(lright), Uncreate(Grot))
         self.wait()
 
