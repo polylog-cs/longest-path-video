@@ -13,7 +13,7 @@ class Naive(OScene):
         # animace nkrát zkopírovaného grafu (už je to náš příkladový graf),
         #   na každém běží bfs z jednoho vrcholu, důležité, aby jednotlivá bfs
         #   běžela sekvenčně a každé bfs běželo sekvenčně
-        scale_factor = 3.0
+        scale_factor = 2.0
         g_scale_factor = 0.21
 
         vertices = tree_data.example_vertices
@@ -28,7 +28,7 @@ class Naive(OScene):
                     layout_scale=3.5,
                     vertex_config={
                         "color": solarized.BASE00,
-                        # "radius": 0.08 * g_scale_factor,
+                        "radius": 0.20,
                     },
                     edge_config={"color": solarized.BASE00},
                     # labels=True
@@ -118,11 +118,15 @@ class Algorithm(Scene):
 
             self.wait()
             self.play(self.g[va].animate.scale(scale_factor))
+            self.play(Create(Text("a", color=solarized.BASE2).move_to(self.g[va].get_center())))
+
             anim1, anim2 = self.g.bfs_animation(va, turn_furthest_off=False)
 
             self.play(anim1)
             self.play(anim2)
             self.wait(1)
+
+            self.wait()
 
             self.play(
                 self.g[va].animate.scale(1 / scale_factor),

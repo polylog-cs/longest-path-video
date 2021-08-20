@@ -1,3 +1,10 @@
+# Ableton Live
+audio/LongestPath\ Project/
+audio/*.asd
+
+# GIMP
+*.xcf
+
 media/
 .idea
 sandbox/

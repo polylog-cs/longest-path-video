@@ -82,17 +82,21 @@ class Triangle(Scene):
             lleft = Line(tleft, tbot, color=solarized.GREEN)
             lright = Line(tbot, tright, color=solarized.GREEN)
             self.play(Create(ltop), Create(lleft), Create(lright), time=2)
+            self.wait(1)
             self.play(Uncreate(ltop), Uncreate(lleft), Uncreate(lright), time=2)
             self.wait(1)
 
         flash_triangle()
+
+        self.play(self.g.animate.change_layout("kamada_kawai"))
+        self.wait(1)
 
         self.play(self.g.animate.set_path_color(b2, c2))
         self.wait(1)
 
         self.play(
             self.g.animate.change_layout(
-                self.g.hanging_position(b2, c2, shift=UP, scale=1.0)
+                self.g.hanging_position(b2, c2, shift=2 * UP, scale=1.0)
             )
         )
 
@@ -140,7 +144,9 @@ class Triangle(Scene):
 class Proof(Scene):
     def construct(self):
         # va, vb, vc = 61, 80, 46
-        va, vb, vc = 62, 21, 64
+        # va, vb, vc = 62, 21, 64
+        # va, vb, vc = 45, 65, 0
+        va, vb, vc = 45, 21, 64
 
         self.g = Tree(
             tree_data.example_vertices,
@@ -153,6 +159,7 @@ class Proof(Scene):
             },
             edge_config={"color": solarized.BASE00},
             # labels=True,
+            label_class=Tex,
         )
 
         hanging = self.g.hanging_position(vb, vc, shift=2 * UP, scale=1.0)
@@ -191,7 +198,7 @@ class Proof(Scene):
         # self.play(self.g[va].animate.scale(1 / scale_factor))
         self.wait()
 
-        vd = 60
+        vd = 4
         top = self.g[vd].get_center()
         line1 = Line(top, top, color=solarized.GREEN)
         line2 = Line(top, top, color=solarized.GREEN)
@@ -200,11 +207,12 @@ class Proof(Scene):
         v_layers, e_layers, _ = self.g.bfs(va)
         v_layers.pop()
         e_layers[-1] = []
+        steps_first_part = 3
         anim11, anim12 = self.g.bfs_animation(
-            va, override_layers=(v_layers[:2], e_layers[:2])
+            va, override_layers=(v_layers[:steps_first_part], e_layers[:steps_first_part])
         )
         anim21, anim22 = self.g.bfs_animation(
-            va, override_layers=(v_layers[2:], e_layers[2:])
+            va, override_layers=(v_layers[steps_first_part:], e_layers[steps_first_part:])
         )
 
         self.play(anim11)
@@ -354,7 +362,6 @@ class Outro(Scene):
         ar2 = Arrow(start = st2, end = en2, color = base_color)
         self.play(Create(txt), Create(ar1), Create(ar2))
 
-        '''
         even_paths = [(1, 5),  (32, 34), (5,20), (33, 1)]
         odd_paths  = [(65, 21),(56,46),  (10,64),(44,80)]
         for i in range(len(even_paths)):
@@ -365,7 +372,6 @@ class Outro(Scene):
             self.play(anim_l1, anim_r1)
             self.wait()
             self.play(anim_l2, anim_r2)
-        '''
 
         self.wait()
         self.play(Uncreate(txt), Uncreate(self.g), Uncreate(self.g2), Uncreate(ar1), Uncreate(ar2), Uncreate(rec1), Uncreate(rec2))
