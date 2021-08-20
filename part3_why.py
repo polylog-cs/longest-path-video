@@ -1,5 +1,5 @@
 from manim import *
-
+import math
 import solarized
 import tree_data
 from util import Tree
@@ -54,8 +54,8 @@ class PhysicalModel(Scene):
 class Triangle(Scene):
     def construct(self):
         pass
-        b1, c1 = 21, 64
-        b2, c2 = 46, 80
+        b1, c1 = 64, 0
+        b2, c2 = 21, 9
 
         self.g = Tree(
             tree_data.example_vertices,
@@ -64,7 +64,7 @@ class Triangle(Scene):
             layout_scale=3.5,
             vertex_config={"color": solarized.BASE00},
             edge_config={"color": solarized.BASE00},
-            # labels=True,
+            labels=True,
         )
         hanging = self.g.hanging_position(b1, c1, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
@@ -103,13 +103,18 @@ class Triangle(Scene):
         self.wait(1)
         self.play(self.g.animate.set_colors_all())
 
-        flash_triangle()
+        # tenhle trojuhelnik uz tu nechame dyl
+        #flash_triangle()
+        ltop = Line(tright, tleft, color=solarized.GREEN)
+        lleft = Line(tleft, tbot, color=solarized.GREEN)
+        lright = Line(tbot, tright, color=solarized.GREEN)
+        self.play(Create(ltop), Create(lleft), Create(lright), time=2)
 
         # animace, zvýraznit třetí vrchol horní cesty a pak vzdálenost k levému
         #   kraji a ke spodku podstromu (vzdálenost je stejná)
         b3, c3 = 64, 80
-        v_layers = [[6], [60, 7], [61, 8], [64, 80]]
-        e_layers = [[(6, 60), (6, 7)], [(60, 61), (7, 8)], [(61, 64), (8, 80)], []]
+        v_layers = [[6], [60, 7], [61, 8], [64, 9]]
+        e_layers = [[(6, 60), (6, 7)], [(60, 61), (7, 8)], [(61, 64), (8, 9)], []]
         anim1, anim2 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers))
         self.play(anim1)
         self.wait(1)
@@ -120,6 +125,8 @@ class Triangle(Scene):
 
         b4, c4 = 64, 100
         # důkaz trojúhelníkovosti sporem - animace sporné cesty
+
+        
         self.play(
             self.g.animate.add_vertices(
                 c4,
@@ -133,11 +140,31 @@ class Triangle(Scene):
         )
         self.play(Flash(self.g[c4], color=solarized.RED))
         self.wait()
-
         self.play(self.g.animate.set_path_color(b2, c4))
         self.wait()
 
-        self.play(self.g.animate.set_colors_all())
+        #rotace sporné cesty
+
+        Grot = Tree(
+            [6, 60, 61, 64, 100],
+            [(6, 60), (60, 61), (61, 64), (64, 100)],
+            layout={6: self.g.vertices[6].get_center(),\
+                60: self.g.vertices[60].get_center(),\
+                61: self.g.vertices[61].get_center(),\
+                64: self.g.vertices[64].get_center(),\
+                100: self.g.vertices[100].get_center()},
+            #layout_scale=3.5,
+            vertex_config={"color": solarized.RED},
+            edge_config={"color": solarized.RED},
+            labels=False
+        )
+
+        self.play(Create(Grot), run_time = 0.1)
+        self.play(Rotate(Grot, math.pi/2, about_point = Grot.vertices[6].get_center()))
+
+        self.wait()
+
+        self.play(self.g.animate.set_colors_all(), Uncreate(ltop), Uncreate(lleft), Uncreate(lright), Uncreate(Grot))
         self.wait()
 
 

@@ -101,6 +101,21 @@ class Tree(Graph):
 
         return self
 
+    def set_colors_and_enlarge(self, vertex_colors=None, edge_colors=None, sc=1):
+        if vertex_colors is not None:
+            for v, c in vertex_colors.items():
+                self[v].set_fill(c)
+                self[v].scale(sc)
+
+        if edge_colors is not None:
+            for e, c in edge_colors.items():
+                if e not in self.edges:
+                    e = e[1], e[0]
+
+                self.edges[e].set_color(c)
+
+        return self
+
     def set_path_color(self, start, end, color=solarized.RED):
         path = self.get_path(start, end)
         vertex_colors = dict((v, color) for v in path)
@@ -225,7 +240,6 @@ class Tree(Graph):
 
         return positions
 
-    #pls implement
     def path_animation(self, start, end, time_per_step=0.5, color=solarized.RED, base_color=solarized.BASE00, rect=None):
         path = self.get_path(start, end)
         
@@ -412,23 +426,24 @@ class ExternalLabeledDot(Dot):
 class OScene(Scene):
     def outline(self, part):
         greyish = solarized.BASE00
-        size = 1
+        sz = 1
+        fst = MarkupText(f"1) Trees", color=greyish, size = sz)
+        snd = MarkupText(f"2) The algorithm", color=greyish, size = sz)
+        thd = MarkupText(f"3) Why it works", color=greyish, size = sz)
         outline_list = [
-            MarkupText(f"1) Trees", color=greyish, size = size),
-            MarkupText(f" ", color=greyish, size = size/2),
-            MarkupText(f"2) The algorithm", color=greyish, size = size),
-            MarkupText(f" ", color=greyish, size = size/2),
-            MarkupText(f"3) Why it works", color=greyish, size = size),
+            fst, snd, thd
         ]
+        fst.shift(1.5*UP)
+        thd.shift(1.5*DOWN)
 
-        full_list = VGroup(*outline_list).arrange(DOWN)
+        full_list = VGroup(*outline_list)
 
         for i in range(3):
             outline_list[i].align_to(full_list, LEFT)
 
         self.play(FadeIn(full_list))
 
-        self.play(Indicate(outline_list[2*part - 2], color=solarized.YELLOW))
+        self.play(Indicate(outline_list[part - 1], color=solarized.YELLOW))
         self.wait()
 
         self.play(FadeOut(full_list))

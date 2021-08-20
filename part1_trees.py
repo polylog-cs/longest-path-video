@@ -211,7 +211,7 @@ class TheBook(Scene):
         )
 
         # self.add_foreground_mobjects(ex_tree)
-        offset2_tree_start = offset2 + np.array((-0.5 * book_height_large, 0, 0))
+        offset2_tree_start = offset2 + np.array((-0.45 * book_height_large, 0.3, 0))
         ex_tree.move_to(offset2_tree_start)
         ex_tree.rot(offset2_tree_start, math.pi / 2.0)
         ex_tree.shift(1 * RIGHT)
@@ -290,14 +290,14 @@ class TheBook(Scene):
             color=text_color,
             size = 0.7
         )
-        some_challenge.shift(2 * LEFT + 2 * DOWN)
+        some_challenge.shift(3 * LEFT + 2 * DOWN)
         channel_name = Tex(r"Channel Name", color = text_color)
         channel_name.shift(1*UP)
-        self.play(FadeIn(names), FadeIn(channel_name), Write(some_challenge))
+        self.play(Write(volhejn), Write(rozhon), Write(channel_name), Write(some_challenge))
 
         self.wait(1)
 
-        self.play(FadeOut(names), Unwrite(some_challenge), FadeOut(channel_name), run_time=1)
+        self.play(Unwrite(volhejn), Unwrite(rozhon), Unwrite(some_challenge), Unwrite(channel_name), run_time=1)
         self.wait(10)
 
 
@@ -349,33 +349,38 @@ class TreeIntro(OScene):
         self.play(self.T.animate.change_layout(positions))
         self.play(self.T.animate.change_layout(positions), run_time=3)
 
-        self.play(FadeOut(tree), run_time = 0.1)
+        self.play(FadeOut(tree), run_time = 1)
 
-        # This means that in a tree, you can walk from every node to every other node
-        # using the connections between nodes,
-        # but there is always just one way of doing that.
-        # [vyznačí se dva vrcholy a pak cesta mezi nimi]
+        self.wait()
+        #ted se prida hrana
 
         extra_edge = Line(
             self.T[6].get_center(), self.T[22].get_center(), color=solarized.RED
         )
-
-        self.play(self.T.animate.set_colors({6: solarized.RED, 22: solarized.RED}))
+        
+        self.play(self.T.animate.set_colors_and_enlarge({6: solarized.RED, 22: solarized.RED}, sc=2))
         self.wait(1)
         self.play(Create(extra_edge))
         self.wait(1)
-
+        
+        self.wait()
         self.wait(1)
-        self.play(self.T.animate.set_path_color(6, 22, solarized.RED))
+        anim1, anim2 = self.T.path_animation(6, 22, time_per_step=0.3)
+        self.play(anim1)
+        self.wait()
+        self.play(anim2)
+        #self.play(anim2)
+        #self.play(self.T.animate.set_path_color(6, 22, solarized.RED))
 
-        self.wait(1)
         self.play(
-            Uncreate(extra_edge), self.T.animate.set_path_color(6, 22, solarized.BASE00)
+            Uncreate(extra_edge),\
+            self.T.animate.set_colors_and_enlarge({6: solarized.BASE00, 22: solarized.BASE00}, sc=1.0/2)
         )
         self.wait(1)
 
+        # ted se odeberou vrcholy
         self.play(
-            self.T.animate.set_colors(vertex_colors = {1: solarized.RED, 8: solarized.RED})
+            self.T.animate.set_colors_and_enlarge(vertex_colors = {1: solarized.BLUE, 8: solarized.BLUE}, sc=2)
         )
         self.wait(1)
         self.play(self.T.animate.remove_edges((1, 8)))
@@ -383,9 +388,8 @@ class TreeIntro(OScene):
 
         self.wait(1)
         self.play(
-            self.T.animate.set_colors(vertex_colors = {1: solarized.BASE00, 8: solarized.BASE00})
+            self.T.animate.set_colors_and_enlarge(vertex_colors = {1: solarized.BASE00, 8: solarized.BASE00}, sc=0.5)
         )
-        self.wait(1)
 
         self.play(FadeOut(self.T))
         self.wait(10)
@@ -449,7 +453,7 @@ class TreeExamples(Scene):
             file_tree[v].reposition_label(file_tree, v)
 
         # self.play(DrawBorderThenFill(Gbacteria))
-        self.play(Create(file_tree))
+        self.play(DrawBorderThenFill(file_tree))
         self.wait(1)
 
         self.play(file_tree.animate.shift(LEFT * 4).scale(0.6))
@@ -475,7 +479,7 @@ class TreeExamples(Scene):
         self.wait()
         self.play(Create(filesystem_text))
         self.wait(3)
-        return
+        
         self.play(Uncreate(filesystem_text))
         self.wait()
 
@@ -498,7 +502,7 @@ class TreeExamples(Scene):
             edge_config={"color": base_color},
         )
 
-        self.play(Create(Gbacteria))
+        self.play(DrawBorderThenFill(Gbacteria))
         self.wait(1)
 
         c = 67
@@ -506,25 +510,30 @@ class TreeExamples(Scene):
 
         self.wait(1)
 
+        sc = 1.8
+
+        # bakterii se zvetsi listy
         self.play(
-            Gbacteria.animate.set_colors(dict((v, solarized.GREEN) for v in leaves))
+            Gbacteria.animate.set_colors_and_enlarge(dict((v, solarized.GREEN) for v in leaves), sc = sc)
         )
         self.wait(1)
-        self.play(Gbacteria.animate.set_colors(dict((v, base_color) for v in leaves)))
-        self.wait(1)
-        """
+        self.play(Gbacteria.animate.set_colors_and_enlarge(dict((v, base_color) for v in leaves), sc=1.0/sc))
         
-        """
+        #highlightnou se dva podobne vrcholy
+        self.play(Gbacteria.animate.set_colors_and_enlarge({c: bac_highlight_color, d: bac_highlight_color}, sc=sc))
+
+        self.play(Gbacteria.animate.set_path_color(c, d, bac_highlight_color))
+        self.wait()
+
+        self.play(Gbacteria.animate.set_path_color(c, d, base_color))
         self.play(
-            Gbacteria.animate.set_colors(
-                {c: bac_highlight_color, d: bac_highlight_color}
+            Gbacteria.animate.set_colors_and_enlarge(
+                {c: base_color, d: base_color}, sc = 1.0/sc
             )
         )
-        self.play(Gbacteria.animate.set_path_color(c, d, bac_highlight_color))
-        self.play(Gbacteria.animate.set_path_color(c, d, base_color))
-        """        
-
-        """
+        
+        # zobrazi se nejdelsi cesta a strom se orotuje
+        self.wait(1)
         self.play(Gbacteria.animate.set_path_color(a, b))
         self.wait(1)
 
@@ -543,6 +552,11 @@ class TreeExamples(Scene):
 
         txt_diameter = Tex(r"Diameter", color=text_color)
         txt_diameter.move_to(np.array((3, 1.5, 0)))
+        txt_21 = Tex(r" = 21", color = text_color)
+        txt_21.align_to(txt_diameter, RIGHT)
+        txt_21.move_to(np.array(1, 0, 0))
+        #txt_21.move_to(np.array((3 + txt_diameter.get_end()-txt_diameter.get_start(), 1.5, 0)))
+
         seg_mid = Line(
             Gbacteria.vertices[a].get_center() + np.array((0, 1, 0)),
             Gbacteria.vertices[b].get_center() + np.array((0, 1, 0)),
@@ -563,25 +577,30 @@ class TreeExamples(Scene):
 
         self.play(Write(txt_diameter), FadeIn(seg))
 
+        self.wait()
         self.play(Gbacteria.animate.set_path_color(a2, b2, solarized.BLUE))
 
+        # bakterie se prevesi do druhe pozice, napise se co je diameter
         self.wait(1)
         bact_hanging_position2 = Gbacteria.hanging_position(
             start=a2, end=b2, shift=bacteria_mid_point, delta=dlt, scale=sc
         )
         self.play(Gbacteria.animate.change_layout(bact_hanging_position2), run_time=2)
-
+        self.wait()
+        self.play(Write(txt_21))
+        self.wait()
         file_a = "/Documents/ETH/Thesis"
         file_b = "/Downloads"
 
-        anim1, anim2 = file_tree.path_animation(file_a, file_b, color=RED)
+        # nejdelsi cesta ve file tree
+        anim1, anim2 = file_tree.path_animation(file_a, file_b, color=RED, time_per_step=1.0)
         self.play(anim1)
         self.wait(1)
         self.play(anim2)
 
         self.wait(1)
         self.play(
-            FadeOut(Gbacteria), FadeOut(file_tree), FadeOut(txt_diameter), FadeOut(seg)
+            FadeOut(Gbacteria), FadeOut(file_tree), FadeOut(txt_diameter), FadeOut(seg), FadeOut(txt_21)
         )
         self.wait(10)
 

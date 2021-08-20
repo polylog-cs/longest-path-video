@@ -5,42 +5,46 @@ jméno
 - the upper bound (lower)
 - amortised
 
+polylog? 
+něco s the book?
+
 thumbnail
 - drake meme? (copyright!)
 
-bublina u erdose
-- bud nedat ten text vubec
-- nebo se pokusit adaptovat mirkuv kod
-- jak to vypadá když to vyjede z pusy?
+
+
+
+
+
+při vysvětlování complexity udělat nový slide, kde je něco jako:
+one starting node: n operations
+number of starting nodes: n
+svorka: n^2 operations
+
+v popisu algoritmu dát znova modrou ne červenou
+
+když se zobrazí node mimo trojúhelník, tak by se měl znova zobrazit trojúhelník
+
+
 
 zeptat se na discordu na copyright
 
-grafy se zobrazují divně přes obrázky (!)
-
-check ze to trva days, mozna hours to days
 
 pridat do fyzikalni simulace bfsko
 
 sjednotit font, barvy
 
-u file systému přejít zpátky k černé ne šedé
 
-udělat flash u bakterie dvou podobných vrcholů
 
-osnova větší font
 
-změnit barvu stromu / silnější hrany?
-
-explaining algorithms using metaphors
-
-pokusit se "přidat a umazat šipky" u file systému
-
-jaký je diam bakteriového stromu?
 
 Vašek V
 
+při kreslení filesystému se ztratí popisky 
+
 potřeba u kvadratického alg. dodělat jak to vypadá když to skončí (vyznačit na konci největší čísla?)
 
+trojúhelník by se měl zvětšovat po částech
 
 self.play(x.animate.shift(RIGHT).scale(2))
 
@@ -57,4 +61,28 @@ občas se čísla v bfs zobrazí jinak
 
 
 ----------------
-self.play(DrawBorderThenFill(ex_tree))
+nedůležitá todo
+
+bublina u erdose
+
+
+umi erdos mrkat?
+
+kdyz se pisou texty tak at vsechny skonci nastejno
+
+grafy se zobrazují divně přes obrázky (!)
+
+STROM: nejdřív se zvětší dva vrcholy a zčervení
+pak se objeví červená hrana
+pak se na chvíli ztuční
+pak se odtuční a odčervená
+pak se ztuční a zčervená druhá cesta, po hranách
+pak se odtuční a odčervená druhá cesta a zmizne hrana a odčervení všechny vrcholy
+
+
+změnit barvu stromu / silnější hrany?
+
+
+--------------
+strom alg 64 0
+strom analyza 21 9
