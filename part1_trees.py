@@ -303,7 +303,7 @@ class TheBook(Scene):
             size = 0.7
         )
         some_challenge.shift(3 * LEFT + 2 * DOWN)
-        channel_name = Tex(r"Channel Name", color = text_color)
+        channel_name = Tex(r"polylog", color = text_color)
         channel_name.shift(1*UP)
         self.play(Write(volhejn), Write(rozhon), Write(channel_name), Write(some_challenge))
 
