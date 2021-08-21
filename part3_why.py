@@ -355,6 +355,7 @@ class Proof(Scene):
         self.wait(2)
 
         self.play(FadeOut(self.g))
+        self.wait()
 
 
     def highlight_right_edge(self):
@@ -655,4 +656,4 @@ class Outro(Scene):
         self.wait()
         self.play(Unwrite(txt_th1), Unwrite(txt_th21), FadeOut(img_3b1b), Unwrite(txt_th22), FadeOut(img_leios), 
             Unwrite(txt_th3), Unwrite(txt_th4), Unwrite(txt_th5))
-        self.wait(10)
+        self.wait()

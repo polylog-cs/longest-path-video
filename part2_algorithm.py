@@ -137,9 +137,6 @@ class Naive(OScene):
         # (animace, jak vašek klikne v terminálu na enter, pak se zapne TQDM progress bar
         #   a bude vidět na pozadí při mluvení, aby se ukázalo, jak pomalé to je)
 
-        # After waiting for like an hour, our calculation seems to be about right.
-        # TODO: animace výpočtu nxn/10^6 = …, pak jak vypadá tqdm bar po hodině?
-
         self.play(*[Uncreate(txt) for txt in all_texts])
         self.play(gs.animate.shift(4*LEFT+2*DOWN).scale(0.3))
         
@@ -203,8 +200,6 @@ class Naive(OScene):
         self.play(Unwrite(txt_mil1), Unwrite(txt_mil2), Uncreate(main_g), Unwrite(txt11), Unwrite(txt12), Unwrite(txt2), Unwrite(txt3), Uncreate(br), Uncreate(gs))
         self.wait()
 
-
-        self.wait(10)
 
 
 class Algorithm(Scene):
@@ -271,6 +266,6 @@ class Algorithm(Scene):
         self.play(
             self.g.animate.set_path_color(config[0][1], config[0][2], config[0][3])
         )
-        self.wait(2)
+        self.wait()
 
         # TODO: animace terminálu, kde vašek klikne a hned vidí výsledek

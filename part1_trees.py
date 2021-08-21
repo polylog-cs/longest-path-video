@@ -24,7 +24,7 @@ class TheBook(Scene):
         erdos_img_wink.height = erdos_img.height
         erdos_img_wink.align_to(erdos_img, LEFT)
         erdos_img_wink.align_to(erdos_img, UP)
-        
+
         self.play(FadeIn(erdos))
         self.wait(1)
 
@@ -223,7 +223,6 @@ class TheBook(Scene):
 
         # self.play(Create(ex_tree))
         self.play(DrawBorderThenFill(ex_tree))
-        
 
         a = 5
         b = 10
@@ -260,15 +259,15 @@ class TheBook(Scene):
         self.play(ex_tree2.animate.change_layout(b_hanging), run_time=time_scale)
         # self.play(ex_tree2.animate.set_path_color(c, c, highlight_color))
         self.play(ex_tree2.animate.set_path_color(b, c, highlight_color))
-        
-        #erdos winks
-        wink_time = 0.2
-        self.play(FadeIn(erdos_img_wink), run_time = wink_time)
-        self.play(ex_tree2.animate.change_layout(b_hanging), run_time= wink_time)
-        self.play(FadeOut(erdos_img_wink), run_time = wink_time)
 
-        self.play(ex_tree2.animate.change_layout(b_hanging), run_time= 0.5)
-        
+        # erdos winks
+        wink_time = 0.2
+        self.play(FadeIn(erdos_img_wink), run_time=wink_time)
+        self.play(ex_tree2.animate.change_layout(b_hanging), run_time=wink_time)
+        self.play(FadeOut(erdos_img_wink), run_time=wink_time)
+
+        self.play(ex_tree2.animate.change_layout(b_hanging), run_time=0.5)
+
         # TODO: animace s našimi jmény - Vašek ® a Václav (V),
         #   pokud bude separátní channel, tak jméno channelu,
         #   naznačit že mluví vašek v?, taky někde napsáno SoME challenge
@@ -278,8 +277,8 @@ class TheBook(Scene):
         ################################################################
 
         self.play(FadeOut(Group(math_book, book2, erdos, ex_tree, ex_tree2, straight)))
-        
-        '''            
+
+        """            
         self.play(
             FadeOut(book2),
             FadeOut(ex_tree),
@@ -287,7 +286,7 @@ class TheBook(Scene):
             FadeOut(math_book),
             FadeOut(straight),
             FadeOut(ex_tree2),            
-        )'''
+        )"""
 
         volhejn = Tex(r"Vaclav Volhejn", color=text_color)
         rozhon = Tex(r"Vaclav Rozhon", color=text_color)
@@ -300,17 +299,30 @@ class TheBook(Scene):
         some_challenge = MarkupText(
             f'<span fgcolor="{some_highlight_color}">S</span>ummer <span fgcolor="{some_highlight_color}">o</span>f <span fgcolor="{some_highlight_color}">M</span>ath<span fgcolor="{some_highlight_color}"> E</span>xposition <span fgcolor="{some_highlight_color}">1</span>',
             color=text_color,
-            size = 0.7
+            size=0.7,
         )
         some_challenge.shift(3 * LEFT + 2 * DOWN)
-        channel_name = Tex(r"polylog", color = text_color)
-        channel_name.shift(1*UP)
-        self.play(Write(volhejn), Write(rozhon), Write(channel_name), Write(some_challenge))
+        channel_name = Tex(r"polylog", color=text_color)
+        channel_name.shift(1 * UP)
+
+        run_time = Write(channel_name).run_time
+        self.play(
+            Write(volhejn, run_time=run_time),
+            Write(rozhon, run_time=run_time),
+            Write(channel_name, run_time=run_time),
+            Write(some_challenge, run_time=run_time),
+        )
 
         self.wait(1)
 
-        self.play(Unwrite(volhejn), Unwrite(rozhon), Unwrite(some_challenge), Unwrite(channel_name), run_time=1)
-        self.wait(10)
+        self.play(
+            Unwrite(volhejn),
+            Unwrite(rozhon),
+            Unwrite(some_challenge),
+            Unwrite(channel_name),
+            run_time=1,
+        )
+        self.wait(1)
 
 
 class TreeIntro(OScene):
@@ -361,50 +373,59 @@ class TreeIntro(OScene):
         self.play(self.T.animate.change_layout(positions))
         self.play(self.T.animate.change_layout(positions), run_time=3)
 
-        self.play(FadeOut(tree), run_time = 1)
+        self.play(FadeOut(tree), run_time=1)
 
         self.wait()
-        #ted se prida hrana
+        # ted se prida hrana
 
         extra_edge = Line(
             self.T[6].get_center(), self.T[22].get_center(), color=solarized.RED
         )
-        
-        self.play(self.T.animate.set_colors_and_enlarge({6: solarized.RED, 22: solarized.RED}, sc=2))
+
+        self.play(
+            self.T.animate.set_colors_and_enlarge(
+                {6: solarized.RED, 22: solarized.RED}, sc=2
+            )
+        )
         self.wait(1)
         self.play(Create(extra_edge))
         self.wait(1)
-        
+
         self.wait()
         self.wait(1)
         anim1, anim2 = self.T.path_animation(6, 22, time_per_step=0.3)
         self.play(anim1)
         self.wait()
         self.play(anim2)
-        #self.play(anim2)
-        #self.play(self.T.animate.set_path_color(6, 22, solarized.RED))
+        # self.play(anim2)
+        # self.play(self.T.animate.set_path_color(6, 22, solarized.RED))
 
         self.play(
-            Uncreate(extra_edge),\
-            self.T.animate.set_colors_and_enlarge({6: solarized.BASE00, 22: solarized.BASE00}, sc=1.0/2)
+            Uncreate(extra_edge),
+            self.T.animate.set_colors_and_enlarge(
+                {6: solarized.BASE00, 22: solarized.BASE00}, sc=1.0 / 2
+            ),
         )
         self.wait(1)
 
         # ted se odeberou vrcholy
         self.play(
-            self.T.animate.set_colors_and_enlarge(vertex_colors = {1: solarized.BLUE, 8: solarized.BLUE}, sc=2)
+            self.T.animate.set_colors_and_enlarge(
+                vertex_colors={1: solarized.BLUE, 8: solarized.BLUE}, sc=2
+            )
         )
         self.wait(1)
         self.play(self.T.animate.remove_edges((1, 8)))
 
-
         self.wait(1)
         self.play(
-            self.T.animate.set_colors_and_enlarge(vertex_colors = {1: solarized.BASE00, 8: solarized.BASE00}, sc=0.5)
+            self.T.animate.set_colors_and_enlarge(
+                vertex_colors={1: solarized.BASE00, 8: solarized.BASE00}, sc=0.5
+            )
         )
 
         self.play(FadeOut(self.T))
-        self.wait(10)
+        self.wait(1)
 
 
 class TreeExamples(Scene):
@@ -491,7 +512,7 @@ class TreeExamples(Scene):
         self.wait()
         self.play(Create(filesystem_text))
         self.wait(3)
-        
+
         self.play(Uncreate(filesystem_text))
         self.wait()
 
@@ -526,13 +547,23 @@ class TreeExamples(Scene):
 
         # bakterii se zvetsi listy
         self.play(
-            Gbacteria.animate.set_colors_and_enlarge(dict((v, solarized.GREEN) for v in leaves), sc = sc)
+            Gbacteria.animate.set_colors_and_enlarge(
+                dict((v, solarized.GREEN) for v in leaves), sc=sc
+            )
         )
         self.wait(1)
-        self.play(Gbacteria.animate.set_colors_and_enlarge(dict((v, base_color) for v in leaves), sc=1.0/sc))
-        
-        #highlightnou se dva podobne vrcholy
-        self.play(Gbacteria.animate.set_colors_and_enlarge({c: bac_highlight_color, d: bac_highlight_color}, sc=sc))
+        self.play(
+            Gbacteria.animate.set_colors_and_enlarge(
+                dict((v, base_color) for v in leaves), sc=1.0 / sc
+            )
+        )
+
+        # highlightnou se dva podobne vrcholy
+        self.play(
+            Gbacteria.animate.set_colors_and_enlarge(
+                {c: bac_highlight_color, d: bac_highlight_color}, sc=sc
+            )
+        )
 
         self.play(Gbacteria.animate.set_path_color(c, d, bac_highlight_color))
         self.wait()
@@ -540,26 +571,23 @@ class TreeExamples(Scene):
         self.play(Gbacteria.animate.set_path_color(c, d, base_color))
         self.play(
             Gbacteria.animate.set_colors_and_enlarge(
-                {c: base_color, d: base_color}, sc = 1.0/sc
+                {c: base_color, d: base_color}, sc=1.0 / sc
             )
         )
         self.wait()
 
+        # ted se zobrazi number of nodes
 
-        #ted se zobrazi number of nodes
-
-        txt_n_file = Tex(r"\# of nodes = 10", color = solarized.BASE00)
-        txt_n_file.move_to(5*LEFT + 2.5*UP)
-        txt_n_bacteria = Tex(r"\# of nodes = 114", color = solarized.BASE00)
-        txt_n_bacteria.move_to(0.1*LEFT + 3*UP)
+        txt_n_file = Tex(r"\# of nodes = 10", color=solarized.BASE00)
+        txt_n_file.move_to(5 * LEFT + 2.5 * UP)
+        txt_n_bacteria = Tex(r"\# of nodes = 114", color=solarized.BASE00)
+        txt_n_bacteria.move_to(0.1 * LEFT + 3 * UP)
 
         self.play(Write(txt_n_file), Write(txt_n_bacteria))
         self.wait()
         self.play(Unwrite(txt_n_file), Unwrite(txt_n_bacteria))
         self.wait()
 
-
-        
         # zobrazi se nejdelsi cesta a strom se orotuje
         self.wait(1)
         self.play(Gbacteria.animate.set_path_color(a, b))
@@ -580,10 +608,10 @@ class TreeExamples(Scene):
 
         txt_diameter = Tex(r"Diameter", color=text_color)
         txt_diameter.move_to(np.array((3.5, 2, 0)))
-        txt_21 = Tex(r" = 21", color = text_color)
+        txt_21 = Tex(r" = 21", color=text_color)
         txt_21.align_to(txt_diameter, RIGHT)
         txt_21.move_to(np.array((1, 0, 0)))
-        #txt_21.move_to(np.array((3 + txt_diameter.get_end()-txt_diameter.get_start(), 1.5, 0)))
+        # txt_21.move_to(np.array((3 + txt_diameter.get_end()-txt_diameter.get_start(), 1.5, 0)))
 
         seg_mid = Line(
             Gbacteria.vertices[a].get_center() + np.array((0, 1, 0)),
@@ -615,18 +643,20 @@ class TreeExamples(Scene):
         )
         self.play(Gbacteria.animate.change_layout(bact_hanging_position2), run_time=2)
         self.wait()
-        #self.play(Write(txt_21))
+        # self.play(Write(txt_21))
         self.wait()
 
         file_a = "/Documents/ETH/Thesis"
         file_b = "/Downloads"
         # nejdelsi cesta ve file tree
-        anim1, anim2 = file_tree.path_animation(file_a, file_b, color=solarized.RED, time_per_step=1.0)
+        anim1, anim2 = file_tree.path_animation(
+            file_a, file_b, color=solarized.RED, time_per_step=1.0
+        )
         self.play(anim1)
         self.wait(1)
 
-        txt_d_file = Tex(r"Diameter = 4", color = solarized.BASE00)
-        txt_d_file.move_to(4*LEFT + 2.5*UP)
+        txt_d_file = Tex(r"Diameter = 4", color=solarized.BASE00)
+        txt_d_file.move_to(4 * LEFT + 2.5 * UP)
         self.play(Write(txt_d_file))
         self.wait()
         self.play(anim2, Unwrite(txt_d_file))
@@ -635,7 +665,7 @@ class TreeExamples(Scene):
         self.play(
             FadeOut(Gbacteria), FadeOut(file_tree), FadeOut(txt_diameter), FadeOut(seg)
         )
-        self.wait(10)
+        self.wait(1)
 
 
 def parse_tree_tree():
