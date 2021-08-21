@@ -288,8 +288,8 @@ class TheBook(Scene):
             FadeOut(ex_tree2),            
         )"""
 
-        volhejn = Tex(r"Vaclav Volhejn", color=text_color)
-        rozhon = Tex(r"Vaclav Rozhon", color=text_color)
+        volhejn = Tex(r"Václav Volhejn", color=text_color)
+        rozhon = Tex(r"Václav Rozhoň", color=text_color)
         names = Group(rozhon, volhejn).arrange(DOWN)
         names.shift(2 * DOWN + 4 * RIGHT)
         volhejn.align_to(names, RIGHT)

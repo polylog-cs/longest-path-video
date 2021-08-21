@@ -83,7 +83,7 @@ class Triangle(Scene):
             + (4 / 1.4 - 1) * eps * DOWN
         )
 
-        def flash_triangle():
+        def flash_triangle(col = solarized.RED):
             ltop = Line(tright, tleft, color=solarized.GREEN)
             lleft = Line(tleft, tbot, color=solarized.GREEN)
             lright = Line(tbot, tright, color=solarized.GREEN)
@@ -91,7 +91,7 @@ class Triangle(Scene):
                 Create(ltop),
                 Create(lleft),
                 Create(lright),
-                self.g.animate.set_path_color(b1, c1, solarized.RED),
+                self.g.animate.set_path_color(b1, c1, col),
                 time=2,
             )
             self.wait(1)
@@ -108,7 +108,7 @@ class Triangle(Scene):
         self.play(self.g.animate.set_path_color(b1, c1, solarized.BASE00))
 
         self.wait(1)
-        self.play(self.g.animate.set_path_color(b2, c2))
+        self.play(self.g.animate.set_path_color(b2, c2, color = solarized.BLUE))
         self.wait(1)
 
         self.play(
@@ -218,15 +218,19 @@ class Proof(Scene):
         hanging = self.g.hanging_position(vb, vc, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
 
-        self.play(DrawBorderThenFill(self.g))
+        self.add(self.g)
         # self.play(DrawBorderThenFill(self.g))
         self.wait()
 
         scale_factor = 3.0
 
         self.wait()
+        acko = Tex("a", color=solarized.BASE2).move_to(self.g[va].get_center())
+        self.add_foreground_mobjects(acko)
+            
         self.play(self.g[va].animate.scale(scale_factor))
-
+        self.play(Create(acko))
+        
         # So, recall that we start by finding some node farthest away from a.
         # Let's think about where this farthest node can be. We start computing
         # distances from a to other nodes. Let us pause the algorithm now, just
@@ -266,7 +270,11 @@ class Proof(Scene):
                 self.play(
                     self.g[v].animate.scale(scale_factor),
                     self.g[va].animate.scale(1 / scale_factor),
+                    Uncreate(acko)
                 )
+                bcko = Tex("b", color=solarized.BASE2).move_to(self.g[v].get_center())
+                self.add_foreground_mobjects(bcko)
+        
             
             self.play(self.g.animate.set_colors_all(solarized.BASE00))
 
@@ -341,7 +349,6 @@ class Proof(Scene):
                     anim21,
                 )
                 self.wait()
-
             self.play(FadeOut(line1), FadeOut(line2))
             self.wait()
             self.play(*uncreate_anims)
@@ -354,7 +361,7 @@ class Proof(Scene):
         self.play(self.g.animate.set_path_color(65, 10, solarized.RED))
         self.wait(2)
 
-        self.play(FadeOut(self.g))
+        self.play(FadeOut(self.g), Uncreate(bcko))
         self.wait()
 
 
@@ -362,6 +369,7 @@ class Proof(Scene):
         # left: 21, 46
         v_edge_top = 9
         v_edge_bot = 56
+
         dy = self.g[v_edge_top].get_center()[1] - self.g[v_edge_bot].get_center()[1]
         padding = 0.5
         top = self.g[v_edge_top].get_center()
@@ -410,6 +418,7 @@ class EvenCase(Scene):
 
         self.play(self.g.animate.set_path_color(32, 34))
         self.wait()
+        self.play(Uncreate(self.g))
 
 
 class Outro(Scene):
@@ -442,7 +451,7 @@ class Outro(Scene):
         edge_scale = 0.5
         node_radius = 0.1
         base_color = solarized.BASE00
-        highlight_color = RED
+        highlight_color = solarized.RED
 
         ex_tree = Tree(
             tree_data.misof_example_vertices,
@@ -592,11 +601,11 @@ class Outro(Scene):
                 even_paths[i][0],
                 even_paths[i][1],
                 time_per_step=t * 1.9,
-                color=RED,
+                color=solarized.RED,
                 rect=(l_c, rec1, rec2),
             )
             anim_r1, anim_r2 = self.g2.path_animation(
-                odd_paths[i][0], odd_paths[i][1], time_per_step=t, color=RED
+                odd_paths[i][0], odd_paths[i][1], time_per_step=t, color=solarized.RED
             )
 
             self.play(anim_l1, anim_r1)
@@ -614,7 +623,7 @@ class Outro(Scene):
             Uncreate(rec2),
         )
 
-        txt_fs = Tex(r"The actual longest path in Vaclav's filesystem", color = base_color)
+        txt_fs = Tex(r"The actual longest path in Václav's filesystem", color = base_color)
         txt_fs.shift(2*UP)
         self.play(Write(txt_fs))
 

@@ -231,8 +231,11 @@ class Algorithm(Scene):
 
             self.wait()
             self.play(self.g[va].animate.scale(scale_factor))
-            self.play(Create(Text("a", color=solarized.BASE2).move_to(self.g[va].get_center())))
-
+            
+            acko = Tex("a", color=solarized.BASE2).move_to(self.g[va].get_center())
+            self.add_foreground_mobjects(acko)
+            self.play(Create(acko))
+            
             anim1, anim2 = self.g.bfs_animation(va, turn_furthest_off=False)
 
             self.play(anim1)
@@ -243,8 +246,13 @@ class Algorithm(Scene):
 
             self.play(
                 self.g[va].animate.scale(1 / scale_factor),
+                Uncreate(acko),
                 self.g[vb].animate.scale(scale_factor),
             )
+
+            bcko = Tex("b", color=solarized.BASE2).move_to(self.g[vb].get_center())
+            self.add_foreground_mobjects(bcko)
+            self.play(Create(bcko))
             self.play(self.g.animate.set_colors_all(solarized.BASE00))
             anim1, anim2 = self.g.bfs_animation(vb, turn_furthest_off=False)
             self.play(anim1)
@@ -259,6 +267,7 @@ class Algorithm(Scene):
 
             self.play(
                 self.g[vb].animate.scale(1 / scale_factor),
+                Uncreate(bcko),
                 self.g[vc].animate.scale(1 / scale_factor),
             )
             self.play(self.g.animate.set_colors_all(solarized.BASE00))

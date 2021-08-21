@@ -9,21 +9,28 @@ VV
 	- upravit voiceover po tom, co dojede naivní algoritmus
 	- písmeka a,b,c v bfs
 
+změny v scénáři
+	- po ukončení algoritmu přidat krátkou větu typu "and this is the end of the algorithm"
+	- druhá nejdelší cesta, říct trochu jinak "this time, the alg. found different longest path"
+	- diameter of my file system is 20
+	- finally, the proof THAT OUR ALGORITHM WORKS, taky "lets look at one final time"!
+	- říct jinak "this finishes the proof"? 
 
+uvození algoritmu: číslíčka by měla zůstat o trochu déle
 
 
 VR
 sjednotit font, barvy
 
-
-
-
-
+IN the picture
+int he middle of ANY longest path
+přidat našim jménům diakritiku
 
 
 
 
 LOW
+
 
 
 VIDEO DESCRIPTION
