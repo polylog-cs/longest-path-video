@@ -20,7 +20,9 @@ class Misof(OScene):
 
 class PhysicalModel(Scene):
     def construct(self):
-        pass
+        scale_factor = 2.5        
+        va, vb, vc = 4, 64, 0
+        right_shift = 3
         # [fyzická demonstrace odteď dál, bude to ten stejný strom a run algoritmu jako předtím,
         #   jen fyzicky, klidně vedle toho může být obrázek té původní animace aby to šlo srovnat]
 
@@ -34,21 +36,42 @@ class PhysicalModel(Scene):
             vertex_config={"color": solarized.BASE00},
             edge_config={"color": solarized.BASE00},
             # labels=True
-        )
+        ).scale(0.7).shift(right_shift*RIGHT)
         self.play(DrawBorderThenFill(self.g))
-
-        va = 52
         self.wait()
+        
+
+        acko = Tex("a", color=solarized.BASE2).scale(0.8).move_to(self.g[va].get_center())
+        self.add_foreground_mobjects(acko)
+            
         self.play(self.g[va].animate.scale(scale_factor))
-        anim1, anim2 = self.g.bfs_animation(va, turn_furthest_off=False)
+        self.play(Create(acko))
+        self.wait()
 
-        self.play(anim1)
-        self.play(anim2)
+        a_position = self.g.hanging_position(va, va, shift=1.5*UP+right_shift*RIGHT)
+        self.play(self.g.animate.change_layout(a_position), acko.animate.move_to(a_position[va]))        
         self.wait(1)
 
-        hanging = self.g.hanging_position(va, va, shift=(-4, 3, 0))
-        self.play(self.g.animate.change_layout(hanging))
-        self.wait(1)
+        bcko = Tex("b", color=solarized.BASE2).scale(0.8).move_to(self.g[vb].get_center())
+        self.add_foreground_mobjects(bcko)
+        self.play(self.g[vb].animate.scale(scale_factor))
+        self.play(Create(bcko), Uncreate(acko), self.g[va].animate.scale(1.0/scale_factor))    
+        self.wait()
+
+        b_position = self.g.hanging_position(vb, vb, shift=3*UP+right_shift*RIGHT)
+        self.play(self.g.animate.change_layout(b_position), bcko.animate.move_to(b_position[vb]))
+        self.wait()
+
+        bc_position = self.g.hanging_position(vb, vc, shift=3*UP+right_shift*RIGHT)
+        self.play(self.g[vc].animate.scale(scale_factor))
+        self.play(Uncreate(bcko))
+        self.wait()
+        self.play(
+            self.g.animate.change_layout(bc_position), 
+        )
+        self.wait()                
+
+        self.wait(10)
 
 
 class Triangle(Scene):
@@ -64,7 +87,7 @@ class Triangle(Scene):
             layout_scale=3.5,
             vertex_config={"color": solarized.BASE00},
             edge_config={"color": solarized.BASE00},
-            # labels=True,
+            #labels=True,
         )
         hanging = self.g.hanging_position(b1, c1, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
