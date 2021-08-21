@@ -29,3 +29,4 @@ GREEN = "#859900"
 from manim import config
 
 config.background_color = BASE2
+config.max_files_cached = 1000

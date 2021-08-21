@@ -272,7 +272,8 @@ class Tree(Graph):
         blinking=True,
         rect = None,
         final_highlight = None,
-        custom_angles = None
+        custom_angles = None,
+        distance_offset=0,
     ):
         color = solarized.MAGENTA
 
@@ -331,13 +332,14 @@ class Tree(Graph):
                     if custom_angles != None and v in custom_angles:
                         custom_angle = custom_angles[v]
                     txt = Tex(
-                            str(i),
+                            str(i+distance_offset),
                             color=solarized.BASE00#,font="Helvetica Neue",weight="SEMIBOLD",
                         ).scale(annotations_scale).move_to(self.get_annotation_position(v, custom_angle = custom_angle))
                     annotation = (
                         txt
                     )
-                    anims_next.append(Create(annotation))
+                    anims.append(Create(annotation))
+                    # anims_next.append(Create(annotation))
                     temp_mobjects.append(annotation)
                     if i == final_highlight:
                         txt_to_highlight.append(txt)
@@ -478,7 +480,7 @@ class OScene(Scene):
 
         self.play(FadeIn(full_list))
 
-        self.play(Indicate(outline_list[part - 1], color=solarized.YELLOW))
+        self.play(Indicate(outline_list[part - 1], color=solarized.BASE02))
         self.wait()
 
         self.play(FadeOut(full_list))

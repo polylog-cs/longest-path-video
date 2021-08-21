@@ -4,6 +4,7 @@ import solarized
 import tree_data
 from util import *
 
+
 class Misof(OScene):
     def construct(self):
         self.outline(3)
@@ -63,7 +64,7 @@ class Triangle(Scene):
             layout_scale=3.5,
             vertex_config={"color": solarized.BASE00},
             edge_config={"color": solarized.BASE00},
-            #labels=True,
+            # labels=True,
         )
         hanging = self.g.hanging_position(b1, c1, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
@@ -73,23 +74,35 @@ class Triangle(Scene):
         self.wait()
 
         eps = 0.1
-        tleft = hanging[b1]+2*eps*LEFT+eps*UP
-        tright = hanging[c1]+2*eps*RIGHT+eps*UP
+        tleft = hanging[b1] + 2 * eps * LEFT + eps * UP
+        tright = hanging[c1] + 2 * eps * RIGHT + eps * UP
         tmid = (tleft + tright) / 2.0
-        tbot = tmid - [(tmid - tleft)[1], (tmid - tleft)[0], 0] + (4/1.4 -1)*eps*DOWN
+        tbot = (
+            tmid
+            - [(tmid - tleft)[1], (tmid - tleft)[0], 0]
+            + (4 / 1.4 - 1) * eps * DOWN
+        )
 
         def flash_triangle():
             ltop = Line(tright, tleft, color=solarized.GREEN)
             lleft = Line(tleft, tbot, color=solarized.GREEN)
             lright = Line(tbot, tright, color=solarized.GREEN)
-            self.play(Create(ltop), Create(lleft), Create(lright), self.g.animate.set_path_color(b1, c1, solarized.RED), time=2)
+            self.play(
+                Create(ltop),
+                Create(lleft),
+                Create(lright),
+                self.g.animate.set_path_color(b1, c1, solarized.RED),
+                time=2,
+            )
             self.wait(1)
             self.play(Uncreate(ltop), Uncreate(lleft), Uncreate(lright), time=2)
             self.wait(1)
 
         flash_triangle()
 
-        self.play(self.g.animate.change_layout("kamada_kawai", layout_scale = 1.5).scale(2))
+        self.play(
+            self.g.animate.change_layout("kamada_kawai", layout_scale=1.5).scale(2)
+        )
         self.wait(1)
 
         self.play(self.g.animate.set_path_color(b1, c1, solarized.BASE00))
@@ -109,7 +122,7 @@ class Triangle(Scene):
         self.wait(1)
 
         # tenhle trojuhelnik uz tu nechame dyl
-        #flash_triangle()
+        # flash_triangle()
         ltop = Line(tright, tleft, color=solarized.GREEN)
         lleft = Line(tleft, tbot, color=solarized.GREEN)
         lright = Line(tbot, tright, color=solarized.GREEN)
@@ -132,7 +145,6 @@ class Triangle(Scene):
         b4, c4 = 64, 100
         # důkaz trojúhelníkovosti sporem - animace sporné cesty
 
-        
         self.play(
             self.g.animate.add_vertices(
                 c4,
@@ -149,31 +161,39 @@ class Triangle(Scene):
         self.play(self.g.animate.set_path_color(b2, c4))
         self.wait()
 
-        #rotace sporné cesty
+        # rotace sporné cesty
 
         Grot = Tree(
             [6, 60, 61, 64, 100],
             [(6, 60), (60, 61), (61, 64), (64, 100)],
-            layout={6: self.g.vertices[6].get_center(),\
-                60: self.g.vertices[60].get_center(),\
-                61: self.g.vertices[61].get_center(),\
-                64: self.g.vertices[64].get_center(),\
-                100: self.g.vertices[100].get_center()},
-            #layout_scale=3.5,
+            layout={
+                6: self.g.vertices[6].get_center(),
+                60: self.g.vertices[60].get_center(),
+                61: self.g.vertices[61].get_center(),
+                64: self.g.vertices[64].get_center(),
+                100: self.g.vertices[100].get_center(),
+            },
+            # layout_scale=3.5,
             vertex_config={"color": solarized.RED},
             edge_config={"color": solarized.RED},
-            labels=False
+            labels=False,
         )
 
-        self.play(Create(Grot), run_time = 0.1)
-        self.play(Rotate(Grot, math.pi/2, about_point = Grot.vertices[6].get_center()))
+        self.play(Create(Grot), run_time=0.1)
+        self.play(Rotate(Grot, math.pi / 2, about_point=Grot.vertices[6].get_center()))
         self.wait()
-        self.play(Rotate(Grot, -math.pi/2, about_point = Grot.vertices[6].get_center()))
+        self.play(Rotate(Grot, -math.pi / 2, about_point=Grot.vertices[6].get_center()))
         self.wait()
 
         self.play(self.g.animate.remove_edges((64, 100)))
         self.play(self.g.animate.remove_vertices(100), run_time=0.1)
-        self.play(self.g.animate.set_colors_all(), Uncreate(ltop), Uncreate(lleft), Uncreate(lright), Uncreate(Grot))
+        self.play(
+            self.g.animate.set_colors_all(),
+            Uncreate(ltop),
+            Uncreate(lleft),
+            Uncreate(lright),
+            Uncreate(Grot),
+        )
         self.wait()
 
 
@@ -182,7 +202,7 @@ class Proof(Scene):
         # va, vb, vc = 61, 80, 46
         # va, vb, vc = 62, 21, 64
         # va, vb, vc = 45, 65, 0
-        #va, vb, vc = 45, 21, 64
+        # va, vb, vc = 45, 21, 64
         va, vb, vc = 45, 21, 9
 
         self.g = Tree(
@@ -196,7 +216,7 @@ class Proof(Scene):
             },
             edge_config={"color": solarized.BASE00},
             # labels=True,
-            label_class=Tex,
+            # label_class=Text,
         )
 
         hanging = self.g.hanging_position(vb, vc, shift=2 * UP, scale=1.0)
@@ -240,62 +260,89 @@ class Proof(Scene):
         # self.play(self.g[va].animate.scale(1 / scale_factor))
         self.wait()
 
-        vd = 4
-        top = self.g[vd].get_center()
-        line1 = Line(top, top, color=solarized.GREEN)
-        line2 = Line(top, top, color=solarized.GREEN)
-        self.add(line1, line2)
+        for v, vd, steps_first_part in [(va, 4, 3), (65, 6, 4)]:
+            top = self.g[vd].get_center()
+            line1 = Line(top, top, color=solarized.GREEN)
+            line2 = Line(top, top, color=solarized.GREEN)
+            self.add(line1, line2)
 
-        v_layers, e_layers, _ = self.g.bfs(va)
-        v_layers.pop()
-        e_layers[-1] = []
-        steps_first_part = 3
-        anim11, anim12 = self.g.bfs_animation(
-            va, override_layers=(v_layers[:steps_first_part], e_layers[:steps_first_part]), custom_angles = custom_angles
-        )
-        anim21, anim22 = self.g.bfs_animation(
-            va, override_layers=(v_layers[steps_first_part:], e_layers[steps_first_part:]), custom_angles = custom_angles
-        )
+            if v != va:
+                self.play(
+                    self.g[v].animate.scale(scale_factor),
+                    self.g[va].animate.scale(1 / scale_factor),
+                )
 
-        self.play(anim11)
-        square = Square(side_length=0.5, color=solarized.GREEN).move_to(
-            self.g[vd].get_center()
-        )
-        self.play(Create(square))
-        self.wait()
-        self.play(Uncreate(square))
-
-        dist = 6.5
-        self.play(
-            AnimationGroup(
-                line1.animate(rate_func=linear).put_start_and_end_on(
-                    top + LEFT * dist, top + DOWN * dist
+            v_layers, e_layers, _ = self.g.bfs(v)
+            # v_layers.pop()
+            # e_layers[-1] = []
+            e_layers.append([])
+            anim11, anim12 = self.g.bfs_animation(
+                va,
+                override_layers=(
+                    v_layers[:steps_first_part],
+                    e_layers[:steps_first_part],
                 ),
-                line2.animate(rate_func=linear).put_start_and_end_on(
-                    top + RIGHT * dist, top + DOWN * dist
-                ),
-                run_time=anim21.get_run_time(),
-            ),
-            anim21,
-        )
-        self.wait()
+                custom_angles = custom_angles
+            )
 
-        #rectangle okolo začínajícího podstromu
-        rect = Rectangle(
-            height = (self.g.vertices[40].get_center() - self.g.vertices[46].get_center())[1] + 1,
-            width = 1.5, 
-            color = solarized.GREEN 
-        )
-        rect.move_to(self.g.vertices[40].get_center()/2 
-            + self.g.vertices[46].get_center()/4 
-            + self.g.vertices[44].get_center()/4
-            + 0.1* LEFT + 0.2*DOWN)
-        self.play(Create(rect))
-        self.wait()
-        self.play(Uncreate(rect))
-        self.wait()
-        self.play(anim12, anim22)
+            uncreate_anims = [anim12]
 
+            self.play(anim11)
+            square = Square(side_length=0.5, color=solarized.GREEN).move_to(
+                self.g[vd].get_center()
+            )
+            self.play(Create(square))
+            self.wait()
+            self.play(Uncreate(square))
+
+            for i in range(steps_first_part, len(v_layers)):
+                anim21, anim22 = self.g.bfs_animation(
+                    va,
+                    override_layers=(
+                        v_layers[i : i + 1],
+                        e_layers[i : i + 1],
+                    ),
+                    distance_offset=i,
+                    turn_furthest_off=(i == len(v_layers) - 1),
+                    custom_angles = custom_angles,
+                )
+                uncreate_anims.append(anim22)
+
+                if i == 5:
+                    #rectangle okolo začínajícího podstromu
+                    rect = Rectangle(
+                        height = (self.g.vertices[40].get_center() - self.g.vertices[46].get_center())[1] + 1,
+                        width = 1.5, 
+                        color = solarized.GREEN 
+                    )
+                    rect.move_to(self.g.vertices[40].get_center()/2 
+                        + self.g.vertices[46].get_center()/4 
+                        + self.g.vertices[44].get_center()/4
+                        + 0.1* LEFT + 0.2*DOWN)
+                    self.play(Create(rect))
+                    self.wait()
+                    self.play(Uncreate(rect))
+
+                dist = i - steps_first_part + 1.5
+                self.play(
+                    AnimationGroup(
+                        # line1.animate(rate_func=linear)
+                        line1.animate.put_start_and_end_on(
+                            top + LEFT * dist, top + DOWN * dist
+                        ),
+                        line2.animate.put_start_and_end_on(
+                            top + RIGHT * dist, top + DOWN * dist
+                        ),
+                        run_time=anim21.get_run_time(),
+                    ),
+                    anim21,
+                )
+                self.wait()
+
+            self.play(FadeOut(line1), FadeOut(line2))
+            self.wait()
+            self.play(*uncreate_anims)
+            self.wait()
 
     def highlight_left_edge(self):
         v_edge_top = 21
@@ -354,14 +401,12 @@ class Outro(Scene):
     def construct(self):
         base_color = solarized.BASE00
 
-
-        #jeste jednou kniha
+        # jeste jednou kniha
         offset = np.array((2.0, -0.5, -1))
         offset_start = np.array((5.0, -2.0, -1))
         offset_final = np.array((8, -3, 0))
         book_height_large = 6.0
         book_height_small = 2.5
-
 
         offset2_start = offset_start
         book2 = OSVGMobject("img/open-book.svg", height=book_height_small)
@@ -403,7 +448,6 @@ class Outro(Scene):
 
         # self.play(Create(ex_tree))
         self.play(DrawBorderThenFill(ex_tree))
-        
 
         a = 5
         b = 10
@@ -454,7 +498,7 @@ class Outro(Scene):
 
 
         ###############################################################################
-        #pak oba stromy
+        # pak oba stromy
         self.g = Tree(
             tree_data.even_example_vertices,
             tree_data.even_example_edges,
@@ -465,17 +509,16 @@ class Outro(Scene):
                 "color": solarized.BASE00
             },
             edge_config={"color": solarized.BASE00},
-            #labels=True,
+            # labels=True,
         )
 
         hanging = self.g.hanging_position(1, 5, shift=UP, scale=1.0)
         self.g.change_layout(hanging)
 
-        self.play(DrawBorderThenFill(self.g), run_time = 0.1)
-        self.wait()        
+        self.play(DrawBorderThenFill(self.g), run_time=0.1)
+        self.wait()
 
-
-        va, vb= 65, 21
+        va, vb = 65, 21
         self.g2 = Tree(
             tree_data.example_vertices,
             tree_data.example_edges,
@@ -486,14 +529,20 @@ class Outro(Scene):
                 "color": solarized.BASE00
             },
             edge_config={"color": solarized.BASE00},
-            #labels=True,
+            # labels=True,
         )
 
-        hanging = self.g2.hanging_position(va, vb, shift=3*RIGHT+0*DOWN, scale=0.7)
+        hanging = self.g2.hanging_position(
+            va, vb, shift=3 * RIGHT + 0 * DOWN, scale=0.7
+        )
         self.g2.change_layout(hanging)
 
-        self.play(ApplyMethod(self.g.shift, 4*LEFT+1*DOWN), DrawBorderThenFill(self.g2), run_time = 1)
-        
+        self.play(
+            ApplyMethod(self.g.shift, 4 * LEFT + 1 * DOWN),
+            DrawBorderThenFill(self.g2),
+            run_time=1,
+        )
+
         # rectangles appear
 
         l_c = 3
@@ -503,36 +552,52 @@ class Outro(Scene):
             self.g[l_c].get_center()
         )
         rec2 = Rectangle(height=0.5, width=1.5, color=solarized.GREEN).move_to(
-            (self.g2[r_c[0]].get_center()+self.g2[r_c[1]].get_center())/2.0
+            (self.g2[r_c[0]].get_center() + self.g2[r_c[1]].get_center()) / 2.0
         )
         self.play(Create(rec1), Create(rec2))
-        
+
         # paths are lighting up
 
-        txt = Tex(r"In the middle of all longest paths", color = base_color)
-        txt.shift(2*UP)
-        
+        txt = Tex(r"In the middle of all longest paths", color=base_color)
+        txt.shift(2 * UP)
+
         st = np.array((-3, 2, 0))
         en = np.array((-4, 0.1, 0))
         st2 = np.array((2, 2, 0))
         en2 = np.array((3, 0.1, 0))
-        ar1 = Arrow(start = st, end = en, color = base_color)
-        ar2 = Arrow(start = st2, end = en2, color = base_color)
+        ar1 = Arrow(start=st, end=en, color=base_color)
+        ar2 = Arrow(start=st2, end=en2, color=base_color)
         self.play(Create(txt), Create(ar1), Create(ar2))
 
-        even_paths = [(1, 5),  (32, 34), (5,20), (33, 1)]
-        odd_paths  = [(65, 21),(56,46),  (10,64),(44,80)]
+        even_paths = [(1, 5), (32, 34), (5, 20), (33, 1)]
+        odd_paths = [(65, 21), (56, 46), (10, 64), (44, 80)]
         for i in range(len(even_paths)):
             t = 0.1
-            anim_l1, anim_l2 = self.g.path_animation(even_paths[i][0], even_paths[i][1], time_per_step = t*1.9, color=RED, rect=(l_c, rec1, rec2))
-            anim_r1, anim_r2 = self.g2.path_animation(odd_paths[i][0], odd_paths[i][1], time_per_step = t, color=RED)
-    
+            anim_l1, anim_l2 = self.g.path_animation(
+                even_paths[i][0],
+                even_paths[i][1],
+                time_per_step=t * 1.9,
+                color=RED,
+                rect=(l_c, rec1, rec2),
+            )
+            anim_r1, anim_r2 = self.g2.path_animation(
+                odd_paths[i][0], odd_paths[i][1], time_per_step=t, color=RED
+            )
+
             self.play(anim_l1, anim_r1)
             self.wait()
             self.play(anim_l2, anim_r2)
 
         self.wait()
-        self.play(Uncreate(txt), Uncreate(self.g), Uncreate(self.g2), Uncreate(ar1), Uncreate(ar2), Uncreate(rec1), Uncreate(rec2))
+        self.play(
+            Uncreate(txt),
+            Uncreate(self.g),
+            Uncreate(self.g2),
+            Uncreate(ar1),
+            Uncreate(ar2),
+            Uncreate(rec1),
+            Uncreate(rec2),
+        )
 
         txt_fs = Tex(r"The actual longest path in Vaclav's filesystem", color = base_color)
         txt_fs.shift(2*UP)

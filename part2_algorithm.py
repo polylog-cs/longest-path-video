@@ -83,7 +83,7 @@ class Naive(OScene):
         )
         # buff = padding (rows, cols)
         gs.arrange_in_grid(cols=8, buff=(0.25, 0.4)).shift(DOWN * 0.25)
-        self.play(DrawBorderThenFill(gs))
+        self.play(FadeIn(gs))
         self.wait()
 
         rng: np.random.Generator = np.random.default_rng(seed=127)
