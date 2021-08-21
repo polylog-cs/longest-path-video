@@ -37,19 +37,22 @@ class Naive(OScene):
         txt = Tex(r"Breadth First Search", color = solarized.BASE00)
         txt.shift(4*RIGHT+3*UP)
 
-        anim1, high_anim, anim2 = main_g.bfs_animation(a, time_per_step=1, annotations=True, final_highlight = 5)
+        anim1, high_anim, anim2 = main_g.bfs_animation(a, time_per_step=1, annotations=True, 
+            final_highlight = 5, 
+            custom_angles = {10: (180, 1), 56: (0, 1)})
         self.play(anim1)
         self.wait()
         self.play(Write(txt))
         self.wait()
-        self.play(*high _anim)
+        self.play(*high_anim)
         self.wait()
         self.play(anim2)
         self.wait()
 
-        anim1, anim2 = main_g
-
-        self.play(Uncreate(main_g), Unwrite(txt))
+        anim1, anim2 = main_g.path_animation(a, 65)
+        self.play(anim1)
+        self.wait()
+        self.play(anim2, Uncreate(main_g), Unwrite(txt))
         self.wait()
 
         # animace nkrát zkopírovaného grafu (už je to náš příkladový graf),
@@ -196,7 +199,6 @@ class Naive(OScene):
         self.play(Write(txt_mil1))
         self.wait()
         self.play(Write(txt_mil2))
-        return
         self.wait()
         self.play(Unwrite(txt_mil1), Unwrite(txt_mil2), Uncreate(main_g), Unwrite(txt11), Unwrite(txt12), Unwrite(txt2), Unwrite(txt3), Uncreate(br), Uncreate(gs))
         self.wait()

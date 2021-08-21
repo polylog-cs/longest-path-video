@@ -121,7 +121,7 @@ class Triangle(Scene):
         b3, c3 = 64, 80
         v_layers = [[6], [60, 7], [61, 8], [64, 9]]
         e_layers = [[(6, 60), (6, 7)], [(60, 61), (7, 8)], [(61, 64), (8, 9)], []]
-        anim1, anim2 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers))
+        anim1, anim2 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers), custom_angles = {64: (-70, 1.5), 61: (180, 1), 9: (90, 1)})
         self.play(anim1)
         self.wait(1)
         self.play(anim2)
@@ -218,7 +218,12 @@ class Proof(Scene):
         v_layers, e_layers, _ = self.g.bfs(va)
         # v_layers.pop()
         # e_layers[-1] = []
-        anim1, anim2 = self.g.bfs_animation(va, override_layers=(v_layers, e_layers))
+
+        custom_angles = {42: (180, 1), 21: (90, 1), 9: (90, 1), 
+            61: (180, 1), 63: (-90, 1), 64: (-90, 1), 
+            54: (180, 1), 60: (180, 1), 62: (0, 1)}
+
+        anim1, anim2 = self.g.bfs_animation(va, override_layers=(v_layers, e_layers), custom_angles = custom_angles)
 
         self.play(anim1)
         self.wait(1)
@@ -246,10 +251,10 @@ class Proof(Scene):
         e_layers[-1] = []
         steps_first_part = 3
         anim11, anim12 = self.g.bfs_animation(
-            va, override_layers=(v_layers[:steps_first_part], e_layers[:steps_first_part])
+            va, override_layers=(v_layers[:steps_first_part], e_layers[:steps_first_part]), custom_angles = custom_angles
         )
         anim21, anim22 = self.g.bfs_animation(
-            va, override_layers=(v_layers[steps_first_part:], e_layers[steps_first_part:])
+            va, override_layers=(v_layers[steps_first_part:], e_layers[steps_first_part:]), custom_angles = custom_angles
         )
 
         self.play(anim11)
@@ -275,6 +280,20 @@ class Proof(Scene):
         )
         self.wait()
 
+        #rectangle okolo začínajícího podstromu
+        rect = Rectangle(
+            height = (self.g.vertices[40].get_center() - self.g.vertices[46].get_center())[1] + 1,
+            width = 1.5, 
+            color = solarized.GREEN 
+        )
+        rect.move_to(self.g.vertices[40].get_center()/2 
+            + self.g.vertices[46].get_center()/4 
+            + self.g.vertices[44].get_center()/4
+            + 0.1* LEFT + 0.2*DOWN)
+        self.play(Create(rect))
+        self.wait()
+        self.play(Uncreate(rect))
+        self.wait()
         self.play(anim12, anim22)
 
 
@@ -338,8 +357,8 @@ class Outro(Scene):
 
         #jeste jednou kniha
         offset = np.array((2.0, -0.5, -1))
-        offset_start = np.array((5.0, 2.0, -1))
-        offset_final = np.array((8, 5, 0))
+        offset_start = np.array((5.0, -2.0, -1))
+        offset_final = np.array((8, -3, 0))
         book_height_large = 6.0
         book_height_small = 2.5
 
@@ -425,9 +444,14 @@ class Outro(Scene):
         whole_book = Group(book2, ex_tree, ex_tree2)
 
 
+
+        #######################################################
+        # kniha odjede
         self.play(
             whole_book.animate.scale(0.2).move_to(offset_final)            
         )
+
+
 
         ###############################################################################
         #pak oba stromy
@@ -512,8 +536,44 @@ class Outro(Scene):
 
         txt_fs = Tex(r"The actual longest path in Vaclav's filesystem", color = base_color)
         txt_fs.shift(2*UP)
-        self.play(Create(txt_fs))
+        self.play(Write(txt_fs))
 
         self.wait()
-        self.play(Uncreate(txt_fs))
+        self.play(Unwrite(txt_fs))
+        self.wait()
+        txt_th1 = Tex(r"Big thanks to: ", color = base_color)
+        txt_th21 = Tex(r"3blue1brown", color = base_color)
+        txt_th22 = Tex(r"\& LeiosOS", color = base_color)
+        img_3b1b = ImageMobject("img/3b1b.jpg")
+        img_3b1b.height = 0.7
+        img_leios= ImageMobject("img/leios.jpg")
+        img_leios.height = 0.7
+        txt_th2 = Group(txt_th21, img_3b1b, txt_th22, img_leios).arrange(RIGHT)
+        txt_th3 = Tex(r"manim community", color = base_color)
+        txt_th4 = Tex(r"Tom Gavenčiak, Mohsen Ghaffari, Filip Hlásek", color = base_color)
+        txt_th5 = Tex(r"Mirek Olšák, Hanka Rozhoňová", color = base_color)
+        txt_th = Group(txt_th1, txt_th2, txt_th3, txt_th4, txt_th5).arrange(DOWN)
+        txt_th1.align_to(txt_th, LEFT)
+        txt_th2.align_to(txt_th, LEFT)
+        txt_th3.align_to(txt_th, LEFT)
+        txt_th4.align_to(txt_th, LEFT)
+        txt_th5.align_to(txt_th, LEFT)
+        
+        self.play(Write(txt_th1))
+        self.wait()
+        self.play(Write(txt_th21), FadeIn(img_3b1b), Write(txt_th22), FadeIn(img_leios))
+        self.wait()
+        self.play(Write(txt_th3))
+        self.play(ApplyWave(
+            txt_th3,
+            rate_func=linear,
+            ripples=3
+        ))
+        self.wait()
+
+        self.play(Write(txt_th4), Write(txt_th5))
+
+        self.wait()
+        self.play(Unwrite(txt_th1), Unwrite(txt_th21), FadeOut(img_3b1b), Unwrite(txt_th22), FadeOut(img_leios), 
+            Unwrite(txt_th3), Unwrite(txt_th4), Unwrite(txt_th5))
         self.wait(10)

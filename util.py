@@ -271,7 +271,8 @@ class Tree(Graph):
         annotations_scale = 0.5,
         blinking=True,
         rect = None,
-        final_highlight = None
+        final_highlight = None,
+        custom_angles = None
     ):
         color = solarized.MAGENTA
 
@@ -326,12 +327,13 @@ class Tree(Graph):
                 anims.append(ApplyFunction(vertex_on, self[v]))
 
                 if annotations:
-                    txt = Text(
+                    custom_angle = None
+                    if custom_angles != None and v in custom_angles:
+                        custom_angle = custom_angles[v]
+                    txt = Tex(
                             str(i),
-                            color=solarized.BASE00,
-                            font="Helvetica Neue",
-                            weight="SEMIBOLD",
-                        ).scale(annotations_scale).move_to(self.get_annotation_position(v))
+                            color=solarized.BASE00#,font="Helvetica Neue",weight="SEMIBOLD",
+                        ).scale(annotations_scale).move_to(self.get_annotation_position(v, custom_angle = custom_angle))
                     annotation = (
                         txt
                     )
@@ -387,12 +389,20 @@ class Tree(Graph):
                 ),
             )
 
-    def get_annotation_position(self, vi):
+    def get_annotation_position(self, vi, custom_angle=None):
         v: Dot = self[vi]
 
         # v.radius does not take into account v.scale(3.) etc
         radius = np.linalg.norm(v.get_top() - v.get_bottom()) / 2
         distance = radius + 0.2
+
+        if custom_angle != None:
+            angle, dist_scale = custom_angle
+            angle *= 2*math.pi / 360.0
+            pos = v.get_center()
+            pos[0] += np.cos(angle) * distance * dist_scale
+            pos[1] += np.sin(angle) * distance * dist_scale
+            return pos
 
         neighbors = self.get_adjacency_list()[vi]
 

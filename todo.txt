@@ -16,8 +16,8 @@ VV
 
 
 VR
-	- custom čísílka
-	- zvýraznit jednu konkrétní cestu při první sim. bfs
+sjednotit font, barvy
+
 
 
 
@@ -29,53 +29,25 @@ VR
 LOW
 
 
+VIDEO DESCRIPTION
+
+odcitovat
+- stránky 3b1b, leios, manimu, lidí co nám pomohli
+- kde jsme vzali fotky/kliparty/drakea
+- hudbu
+- solarized barvy
+- knížku
+
+- napsat pár věcí o centru atd. 
+
+
 
 -------------------------------------------------
 
 
-při vysvětlování complexity udělat nový slide, kde je něco jako:
-one starting node: n operations
-number of starting nodes: n
-svorka: n^2 operations
-
-v popisu algoritmu dát znova modrou ne červenou
-
-sjednotit font, barvy
-
-pridat n = 10º6
-
-
-
-
-Vašek V
-
-
-
-
-
-----------------
-nedůležitá todo
 
 bublina u erdose
-
 
 kdyz se pisou texty tak at vsechny skonci nastejno
 
 grafy se zobrazují divně přes obrázky (!)
-
-STROM: nejdřív se zvětší dva vrcholy a zčervení
-pak se objeví červená hrana
-pak se na chvíli ztuční
-pak se odtuční a odčervená
-pak se ztuční a zčervená druhá cesta, po hranách
-pak se odtuční a odčervená druhá cesta a zmizne hrana a odčervení všechny vrcholy
-
-
-změnit barvu stromu / silnější hrany?
-
-
---------------
-strom alg 64 0
-strom analyza 21 9
--s renderuje jen posledni snimek
-DrawBorderThenFill
