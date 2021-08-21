@@ -268,7 +268,7 @@ class Tree(Graph):
         time_per_step=0.5,
         override_layers=None,  # Použije tyhle data místo bfs
         annotations=True,
-        annotations_scale = 0.5,
+        annotations_scale = 0.75,
         blinking=True,
         rect = None,
         final_highlight = None,

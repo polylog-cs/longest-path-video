@@ -6,11 +6,8 @@ HIGH
 
 VV
 	bfs
-	- fixnout to, že čísílka jsou opožděná
-	- přidat waity, aby se dalo krokovat
 	- upravit voiceover po tom, co dojede naivní algoritmus
 	- písmeka a,b,c v bfs
-	- trojúhelník by se měl zvětšovat po částech
 
 
 

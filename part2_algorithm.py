@@ -168,7 +168,7 @@ class Naive(OScene):
         txt12.align_to(txt11, LEFT)
         txt1.shift(1*UP)
 
-        anim1, anim2 = main_g.bfs_animation(a, time_per_step=1, annotations=True, annotations_scale = 0.25)
+        anim1, anim2 = main_g.bfs_animation(a, time_per_step=1, annotations=True, annotations_scale = 0.35)
         self.play(anim1, Write(txt11), Write(txt12))
         self.wait()
         self.play(anim2)
@@ -206,11 +206,6 @@ class Naive(OScene):
 
         self.wait(10)
 
-class QuadraticVsLinear(Scene):
-    def construct(self):
-        pass
-        # TODO: animace lineární a kvadratické křivky: n^2 vs n vs 10n
-
 
 class Algorithm(Scene):
     def construct(self):
@@ -236,7 +231,6 @@ class Algorithm(Scene):
 
         config = [(52, 21, 64, solarized.RED), (40, 80, 46, solarized.BLUE)]
 
-        # TODO (VV): druhou iteraci prehrat rychleji
         for va, vb, vc, color in config:
             scale_factor = 3.0
 

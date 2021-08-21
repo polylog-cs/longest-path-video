@@ -199,10 +199,6 @@ class Triangle(Scene):
 
 class Proof(Scene):
     def construct(self):
-        # va, vb, vc = 61, 80, 46
-        # va, vb, vc = 62, 21, 64
-        # va, vb, vc = 45, 65, 0
-        # va, vb, vc = 45, 21, 64
         va, vb, vc = 45, 21, 9
 
         self.g = Tree(
@@ -216,7 +212,7 @@ class Proof(Scene):
             },
             edge_config={"color": solarized.BASE00},
             # labels=True,
-            # label_class=Text,
+            label_class=Text,
         )
 
         hanging = self.g.hanging_position(vb, vc, shift=2 * UP, scale=1.0)
@@ -251,7 +247,7 @@ class Proof(Scene):
 
         # By this time, we have already reached all nodes on the left side,
         # except the nodes lying on the edge of the triangle.
-        # self.highlight_left_edge()
+        # self.highlight_right_edge()
 
         # We have also reached the node on the right that is closest to the
         # bottom tip of the triangle. That means we already reached all the
@@ -260,17 +256,19 @@ class Proof(Scene):
         # self.play(self.g[va].animate.scale(1 / scale_factor))
         self.wait()
 
-        for v, vd, steps_first_part in [(va, 4, 3), (65, 6, 4)]:
+        for it, v, vd, steps_first_part in [(0, va, 4, 3), (1, 65, 6, 4)]:
             top = self.g[vd].get_center()
             line1 = Line(top, top, color=solarized.GREEN)
             line2 = Line(top, top, color=solarized.GREEN)
             self.add(line1, line2)
 
-            if v != va:
+            if it == 1:
                 self.play(
                     self.g[v].animate.scale(scale_factor),
                     self.g[va].animate.scale(1 / scale_factor),
                 )
+            
+            self.play(self.g.animate.set_colors_all(solarized.BASE00))
 
             v_layers, e_layers, _ = self.g.bfs(v)
             # v_layers.pop()
@@ -288,12 +286,14 @@ class Proof(Scene):
             uncreate_anims = [anim12]
 
             self.play(anim11)
-            square = Square(side_length=0.5, color=solarized.GREEN).move_to(
-                self.g[vd].get_center()
-            )
-            self.play(Create(square))
-            self.wait()
-            self.play(Uncreate(square))
+
+            if it == 0:
+                square = Square(side_length=0.5, color=solarized.GREEN).move_to(
+                    self.g[vd].get_center()
+                )
+                self.play(Create(square))
+                self.wait()
+                self.play(Uncreate(square))
 
             for i in range(steps_first_part, len(v_layers)):
                 anim21, anim22 = self.g.bfs_animation(
@@ -303,12 +303,12 @@ class Proof(Scene):
                         e_layers[i : i + 1],
                     ),
                     distance_offset=i,
-                    turn_furthest_off=(i == len(v_layers) - 1),
+                    turn_furthest_off=(i != len(v_layers) - 1),
                     custom_angles = custom_angles,
                 )
                 uncreate_anims.append(anim22)
 
-                if i == 5:
+                if it == 0 and i == 5:
                     #rectangle okolo začínajícího podstromu
                     rect = Rectangle(
                         height = (self.g.vertices[40].get_center() - self.g.vertices[46].get_center())[1] + 1,
@@ -322,6 +322,9 @@ class Proof(Scene):
                     self.play(Create(rect))
                     self.wait()
                     self.play(Uncreate(rect))
+
+                if it == 0 and i == 7:
+                    self.highlight_right_edge()
 
                 dist = i - steps_first_part + 1.5
                 self.play(
@@ -343,20 +346,31 @@ class Proof(Scene):
             self.wait()
             self.play(*uncreate_anims)
             self.wait()
+        
+        # Zvyraznit nalezenou cestu
+        self.play(self.g[10].animate.scale(scale_factor))
+        self.play(self.g.animate.set_colors_all(solarized.BASE00))
 
-    def highlight_left_edge(self):
-        v_edge_top = 21
-        v_edge_bot = 46
+        self.play(self.g.animate.set_path_color(65, 10, solarized.RED))
+        self.wait(2)
+
+        self.play(FadeOut(self.g))
+
+
+    def highlight_right_edge(self):
+        # left: 21, 46
+        v_edge_top = 9
+        v_edge_bot = 56
         dy = self.g[v_edge_top].get_center()[1] - self.g[v_edge_bot].get_center()[1]
         padding = 0.5
         top = self.g[v_edge_top].get_center()
 
         poly = Polygon(
-            top + 2 * LEFT * padding + UP * padding,
+            top + 2 * RIGHT * padding + UP * padding,
             top + UP * padding,
-            top + np.array((dy + 2 * padding, -dy - padding, 0.0)),
-            top + np.array((dy, -dy - padding, 0.0)),
-            color=solarized.GREEN,
+            top + np.array((-dy - 2 * padding, -dy - padding, 0.0)),
+            top + np.array((-dy, -dy - padding, 0.0)),
+            color=solarized.RED,
         )
         self.play(Create(poly))
         self.wait(1)
