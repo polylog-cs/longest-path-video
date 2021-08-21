@@ -10,6 +10,42 @@ class Naive(OScene):
     def construct(self):
         self.outline(2)
 
+        #vytvori prvni strom a ukaze bfs
+
+        a = 4
+        main_g = Tree(
+                    tree_data.example_vertices,
+                    tree_data.example_edges,
+                    layout="kamada_kawai",
+                    # layout_scale=3.5,
+                    layout_scale=3.5,
+                    vertex_config={
+                        "color": solarized.BASE00,
+                        "radius": 0.20,
+                    },
+                    edge_config={"color": solarized.BASE00},
+                    # labels=True
+                )
+
+        self.play(DrawBorderThenFill(main_g))
+        self.wait()
+
+        
+        self.play(main_g.animate.set_colors_and_enlarge(vertex_colors = {a: solarized.RED}, sc = 1.5))
+        self.wait()
+
+        txt = Tex(r"Breadth First Search", color = solarized.BASE00)
+        txt.shift(4*RIGHT+3*UP)
+
+        anim1, high_anim, anim2 = main_g.bfs_animation(a, time_per_step=1, annotations=True, final_highlight = 5)
+        self.play(anim1, Write(txt))
+        self.wait()
+        self.play(*high_anim)
+        self.wait()
+        self.play(anim2)
+        self.play(Uncreate(main_g), Unwrite(txt))
+        self.wait()
+
         # animace nkrát zkopírovaného grafu (už je to náš příkladový graf),
         #   na každém běží bfs z jednoho vrcholu, důležité, aby jednotlivá bfs
         #   běžela sekvenčně a každé bfs běželo sekvenčně
@@ -33,46 +69,66 @@ class Naive(OScene):
                     edge_config={"color": solarized.BASE00},
                     # labels=True
                 ).scale(g_scale_factor)
-                for _ in range(len(vertices))
+                for _ in range(int(len(vertices)))
             ]
         )
         # buff = padding (rows, cols)
         gs.arrange_in_grid(cols=8, buff=(0.25, 0.4)).shift(DOWN * 0.25)
-        self.play(Create(gs))
+        self.play(DrawBorderThenFill(gs))
         self.wait()
 
         rng: np.random.Generator = np.random.default_rng(seed=127)
         rng.shuffle(vertices)
+        
 
+        #k cemu je tohle dobre??
+        '''
         self.play(
             *[
                 g[va].animate.scale(scale_factor)
                 for va, g in zip(vertices, gs)
             ]
         )
+        '''
 
-        for va, g in zip(vertices, gs[:7]):
+        
+        num_before = 5
+        i = 0
+        nines = []
+        all_texts = []
+        for va, g in zip(vertices, gs):
             v_layers, e_layers, _ = g.bfs(va)
             vb = rng.choice(v_layers[-1])
 
-            anim1, anim2 = g.bfs_animation(va, time_per_step=0.2, annotations=False)
-            self.play(anim1)
-            self.play(anim2)
-            self.play(
-                Create(
-                    Text(
+            
+            run_time = 0.1
+            if i < num_before:
+                anim1, anim2 = g.bfs_animation(va, time_per_step=0.3, annotations=False)
+                self.play(anim1)
+                self.play(anim2)
+                run_time = 0.5
+            txt = Text(
                         f"Length: {len(v_layers) - 1}",
                         color=solarized.BASE00,
                         font="Helvetica Neue",
                         weight="SEMIBOLD",
-                    )
-                    .scale(0.4)
-                    .move_to(g.get_top() + UP * 0.2)
-                ),
+                    ).scale(0.4).move_to(g.get_top() + UP * 0.2)
+
+            all_texts.append(txt)
+            if len(v_layers) - 1 == 9:
+                nines.append(txt)
+
+            self.play(
+                Create(txt),
                 g.animate.set_path_color(va, vb),
-                run_time=0.5,
+                run_time=run_time,
             )
-            
+            i += 1
+
+        self.wait()
+
+        self.play(*[Indicate(txt) for txt in nines])
+
         self.wait()
 
         # (animace, jak vašek klikne v terminálu na enter, pak se zapne TQDM progress bar
@@ -81,6 +137,59 @@ class Naive(OScene):
         # After waiting for like an hour, our calculation seems to be about right.
         # TODO: animace výpočtu nxn/10^6 = …, pak jak vypadá tqdm bar po hodině?
 
+        self.play(*[Uncreate(txt) for txt in all_texts])
+        self.play(gs.animate.shift(4*LEFT+2*DOWN).scale(0.3))
+        
+
+        main_g = Tree(
+                    tree_data.example_vertices,
+                    tree_data.example_edges,
+                    layout="kamada_kawai",
+                    # layout_scale=3.5,
+                    layout_scale=1.5,
+                    vertex_config={
+                        "color": solarized.BASE00,
+                        "radius": 0.08,
+                    },
+                    edge_config={"color": solarized.BASE00},
+                    # labels=True
+                )
+        main_g.shift(4*LEFT + 1*UP)
+        self.play(DrawBorderThenFill(main_g))
+
+
+        txt11 = Tex(r"$n$ computations", color = solarized.BASE00).scale(0.7)
+        txt12 = Tex(r"per starting node", color = solarized.BASE00).scale(0.7)
+        txt11.shift(1*RIGHT+2*UP)
+        txt1 = Group(txt11, txt12).arrange(DOWN)
+        txt12.align_to(txt11, LEFT)
+        txt1.shift(1*UP)
+
+        anim1, anim2 = main_g.bfs_animation(a, time_per_step=1, annotations=True, annotations_scale = 0.25)
+        self.play(anim1, Write(txt11), Write(txt12))
+        self.wait()
+        self.play(anim2)
+        self.wait()
+
+        txt2 = Tex(r"$n$ starting nodes", color = solarized.BASE00).scale(0.7)
+        txt2.shift(0*RIGHT + 2*DOWN)
+        self.play(Write(txt2))
+        self.wait()
+
+        txts = Group(txt1, txt2)
+        txt3 = Tex(r"$n^2$ operations in total", color = solarized.BASE00).scale(0.7)
+        br = Brace(txts, direction = RIGHT, color = solarized.BASE00)
+        txt3.align_to(br, LEFT)
+        txt3.shift([0.4, br.get_center()[1], 0])
+        self.play(Write(txt3), Create(br))
+        self.wait()
+
+
+        self.play(Uncreate(main_g), Unwrite(txt11), Unwrite(txt12), Unwrite(txt2), Unwrite(txt3), Uncreate(br), Uncreate(gs))
+        self.wait()
+
+
+        self.wait(10)
 
 class QuadraticVsLinear(Scene):
     def construct(self):

@@ -1,12 +1,3 @@
-jméno
-- NPrime    N'
-- O(log n)
-- sublinear
-- the upper bound (lower)
-- amortised
-
-polylog? 
-něco s the book?
 
 
 při vysvětlování complexity udělat nový slide, kde je něco jako:
@@ -26,19 +17,15 @@ sjednotit font, barvy
 
 Vašek V
 
+bfs barví červeně o jedna jinak než kdy dává popisky
+
 při kreslení filesystému se ztratí popisky 
 
-potřeba u kvadratického alg. dodělat jak to vypadá když to skončí (vyznačit na konci největší čísla?)
-
 trojúhelník by se měl zvětšovat po částech
-
-self.play(x.animate.shift(RIGHT).scale(2))
 
 v bfs se nezobrazí jednička
 
 občas se čísla v bfs zobrazí jinak
-
-úvod animace se spoustou stromů aby to bylo víc smooth
 
 
 
@@ -69,3 +56,4 @@ změnit barvu stromu / silnější hrany?
 strom alg 64 0
 strom analyza 21 9
 -s renderuje jen posledni snimek
+DrawBorderThenFill

@@ -268,8 +268,10 @@ class Tree(Graph):
         time_per_step=0.5,
         override_layers=None,  # Použije tyhle data místo bfs
         annotations=True,
+        annotations_scale = 0.5,
         blinking=True,
         rect = None,
+        final_highlight = None
     ):
         color = solarized.MAGENTA
 
@@ -291,6 +293,7 @@ class Tree(Graph):
 
         anims_next = []
         trigger_was_used = False
+        txt_to_highlight = []
         for i in range(len(v_layers)):
             anims = anims_next
             anims_next = []
@@ -323,18 +326,19 @@ class Tree(Graph):
                 anims.append(ApplyFunction(vertex_on, self[v]))
 
                 if annotations:
-                    annotation = (
-                        Text(
+                    txt = Text(
                             str(i),
                             color=solarized.BASE00,
                             font="Helvetica Neue",
                             weight="SEMIBOLD",
-                        )
-                        .scale(0.5)
-                        .move_to(self.get_annotation_position(v))
+                        ).scale(annotations_scale).move_to(self.get_annotation_position(v))
+                    annotation = (
+                        txt
                     )
                     anims_next.append(Create(annotation))
                     temp_mobjects.append(annotation)
+                    if i == final_highlight:
+                        txt_to_highlight.append(txt)
 
                 if i == len(v_layers) - 1 and not turn_furthest_off:
                     # Do not turn these off.
@@ -347,20 +351,41 @@ class Tree(Graph):
         # Add any remaining animations
         all_anims.append(AnimationGroup(*anims_next, run_time=time_per_step))
 
+        highlight_anims = []
+        if final_highlight != None:
+            for txt in txt_to_highlight:
+                highlight_anims.append(Indicate(txt, color = solarized.BLUE))
+
         # Tuple of animations
-        return (
-            AnimationGroup(*all_anims, lag_ratio=0.95),
-            # Cleanup animations
-            AnimationGroup(
-                *(
-                    [FadeOut(l) for l in temp_mobjects]
-                    + [
-                        self[v].animate.set_fill(solarized.BASE00)
-                        for v in to_unhighlight
-                    ]
+        if final_highlight == None:
+            return (
+                AnimationGroup(*all_anims, lag_ratio=0.95),
+                # Cleanup animations
+                AnimationGroup(
+                    *(
+                        [FadeOut(l) for l in temp_mobjects]
+                        + [
+                            self[v].animate.set_fill(solarized.BASE00)
+                            for v in to_unhighlight
+                        ]
+                    ),
                 ),
-            ),
-        )
+            )
+        else:
+            return (
+                AnimationGroup(*all_anims, lag_ratio=0.95),
+                highlight_anims,
+                # Cleanup animations
+                AnimationGroup(
+                    *(
+                        [FadeOut(l) for l in temp_mobjects]
+                        + [
+                            self[v].animate.set_fill(solarized.BASE00)
+                            for v in to_unhighlight
+                        ]
+                    ),
+                ),
+            )
 
     def get_annotation_position(self, vi):
         v: Dot = self[vi]
