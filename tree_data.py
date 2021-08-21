@@ -428,6 +428,9 @@ def parse_linux_tree(path, n_vertices=None):
             lines = lines[::len(lines) // n_vertices]
 
         for line in lines:
+            if line.startswith("/System/Volumes/Data/"):
+                continue
+
             line = line.strip()
             if " -> " in line:
                 line = line[: line.index(" -> ")]
