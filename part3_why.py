@@ -2,8 +2,7 @@ from manim import *
 import math
 import solarized
 import tree_data
-from util import Tree
-from util import OScene
+from util import *
 
 class Misof(OScene):
     def construct(self):
@@ -35,7 +34,7 @@ class PhysicalModel(Scene):
             edge_config={"color": solarized.BASE00},
             # labels=True
         )
-        self.play(Create(self.g))
+        self.play(DrawBorderThenFill(self.g))
 
         va = 52
         self.wait()
@@ -69,7 +68,7 @@ class Triangle(Scene):
         hanging = self.g.hanging_position(b1, c1, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
 
-        self.play(Create(self.g))
+        self.play(DrawBorderThenFill(self.g))
         self.play(self.g.animate.set_path_color(b1, c1, solarized.RED))
         self.wait()
 
@@ -90,7 +89,7 @@ class Triangle(Scene):
 
         flash_triangle()
 
-        self.play(self.g.animate.change_layout("kamada_kawai", layout_scale = 1.5))
+        self.play(self.g.animate.change_layout("kamada_kawai", layout_scale = 1.5).scale(2))
         self.wait(1)
 
         self.play(self.g.animate.set_path_color(b1, c1, solarized.BASE00))
@@ -100,13 +99,14 @@ class Triangle(Scene):
         self.wait(1)
 
         self.play(
-            self.g.animate.change_layout(
+            self.g.animate.scale(0.5).change_layout(
                 self.g.hanging_position(b2, c2, shift=2 * UP, scale=1.0)
             )
         )
 
         self.wait(1)
         self.play(self.g.animate.set_colors_all())
+        self.wait(1)
 
         # tenhle trojuhelnik uz tu nechame dyl
         #flash_triangle()
@@ -114,6 +114,7 @@ class Triangle(Scene):
         lleft = Line(tleft, tbot, color=solarized.GREEN)
         lright = Line(tbot, tright, color=solarized.GREEN)
         self.play(Create(ltop), Create(lleft), Create(lright), time=2)
+        self.wait(1)
 
         # animace, zvýraznit třetí vrchol horní cesty a pak vzdálenost k levému
         #   kraji a ke spodku podstromu (vzdálenost je stejná)
@@ -181,7 +182,8 @@ class Proof(Scene):
         # va, vb, vc = 61, 80, 46
         # va, vb, vc = 62, 21, 64
         # va, vb, vc = 45, 65, 0
-        va, vb, vc = 45, 21, 64
+        #va, vb, vc = 45, 21, 64
+        va, vb, vc = 45, 21, 9
 
         self.g = Tree(
             tree_data.example_vertices,
@@ -200,7 +202,7 @@ class Proof(Scene):
         hanging = self.g.hanging_position(vb, vc, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
 
-        self.play(Create(self.g))
+        self.play(DrawBorderThenFill(self.g))
         # self.play(DrawBorderThenFill(self.g))
         self.wait()
 
@@ -314,7 +316,7 @@ class EvenCase(Scene):
         hanging = self.g.hanging_position(1, 5, shift=UP, scale=1.0)
         self.g.change_layout(hanging)
 
-        self.play(Create(self.g))
+        self.play(DrawBorderThenFill(self.g))
         # self.play(DrawBorderThenFill(self.g))
         self.wait()
 
@@ -332,6 +334,103 @@ class EvenCase(Scene):
 class Outro(Scene):
     def construct(self):
         base_color = solarized.BASE00
+
+
+        #jeste jednou kniha
+        offset = np.array((2.0, -0.5, -1))
+        offset_start = np.array((5.0, 2.0, -1))
+        offset_final = np.array((8, 5, 0))
+        book_height_large = 6.0
+        book_height_small = 2.5
+
+
+        offset2_start = offset_start
+        book2 = OSVGMobject("img/open-book.svg", height=book_height_small)
+        # http://www.clker.com/cliparts/I/O/x/x/4/8/open-book.svg
+        book2.move_to(offset2_start)
+        self.play(FadeIn(book2))
+
+        offset2 = offset + np.array((0, 0, 0))
+        self.play(
+            ApplyMethod(
+                book2.move_and_resize, offset2, book_height_large / book_height_small
+            )
+        )
+
+        # strom
+        time_scale = 2.0
+        tree_scale = 2.0
+        edge_scale = 0.5
+        node_radius = 0.1
+        base_color = solarized.BASE00
+        highlight_color = RED
+
+        ex_tree = Tree(
+            tree_data.misof_example_vertices,
+            tree_data.misof_example_edges,
+            layout="kamada_kawai",
+            layout_scale=tree_scale,
+            vertex_config={"radius": node_radius, "color": base_color},
+            labels=False,
+            edge_config={"color": base_color}
+            # labels=True
+        )
+
+        # self.add_foreground_mobjects(ex_tree)
+        offset2_tree_start = offset2 + np.array((-0.45 * book_height_large, 0.3, 0))
+        ex_tree.move_to(offset2_tree_start)
+        ex_tree.rot(offset2_tree_start, math.pi / 2.0)
+        ex_tree.shift(1 * RIGHT)
+
+        # self.play(Create(ex_tree))
+        self.play(DrawBorderThenFill(ex_tree))
+        
+
+        a = 5
+        b = 10
+        c = 20
+
+        self.play(ex_tree.animate.set_path_color(a, a, GREEN))
+        a_hanging = ex_tree.hanging_position(
+            a,
+            a,
+            shift=offset2
+            + np.array((-0.3 * book_height_large, 0.2 * book_height_large, 0)),
+            scale=edge_scale,
+            delta=5 * node_radius,
+            custom_layers={2: [12, 3, 13, 7, 15, 18]},
+        )
+
+        self.play(ex_tree.animate.change_layout(a_hanging), run_time=time_scale)
+        self.play(ex_tree.animate.set_path_color(b, b, highlight_color))
+
+        ex_tree2 = ex_tree.copy()
+        b_hanging = ex_tree.hanging_position(
+            b,
+            b,
+            shift=offset2
+            + np.array((+0.26 * book_height_large, 0.46 * book_height_large, 0)),
+            scale=edge_scale,
+            delta=5 * node_radius,
+            custom_layers={},
+        )
+
+        # takle se to asi nema delat?
+        self.play(ex_tree2.animate.set_path_color(a, a, base_color), run_time=0)
+        self.play(ex_tree2.animate.set_path_color(b, b, highlight_color), run_time=0)
+        self.play(ex_tree2.animate.change_layout(b_hanging), run_time=time_scale)
+        # self.play(ex_tree2.animate.set_path_color(c, c, highlight_color))
+        self.play(ex_tree2.animate.set_path_color(b, c, highlight_color))
+
+        whole_book = Group(book2, ex_tree, ex_tree2)
+
+
+        self.play(
+            whole_book.animate.scale(0.2).move_to(offset_final)            
+        )
+
+        ###############################################################################
+        #pak oba stromy
         self.g = Tree(
             tree_data.even_example_vertices,
             tree_data.even_example_edges,
@@ -348,7 +447,7 @@ class Outro(Scene):
         hanging = self.g.hanging_position(1, 5, shift=UP, scale=1.0)
         self.g.change_layout(hanging)
 
-        self.play(Create(self.g), run_time = 0.1)
+        self.play(DrawBorderThenFill(self.g), run_time = 0.1)
         self.wait()        
 
 
@@ -369,7 +468,7 @@ class Outro(Scene):
         hanging = self.g2.hanging_position(va, vb, shift=3*RIGHT+0*DOWN, scale=0.7)
         self.g2.change_layout(hanging)
 
-        self.play(ApplyMethod(self.g.shift, 4*LEFT+1*DOWN), Create(self.g2), run_time = 1)
+        self.play(ApplyMethod(self.g.shift, 4*LEFT+1*DOWN), DrawBorderThenFill(self.g2), run_time = 1)
         
         # rectangles appear
 

@@ -15,7 +15,7 @@ class Tree(Graph):
             # Assumes vertices are positional arg
             assert "vertices" not in kwargs
             labels = dict(
-                (v, label_class(str(v), fill_color=solarized.BASE2).scale(0.5)) for v in args[0]
+                (v, label_class(str(v), fill_color=solarized.BASE00).scale(0.7)) for v in args[0]
             )
             kwargs["labels"] = labels
 

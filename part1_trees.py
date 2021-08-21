@@ -262,7 +262,7 @@ class TheBook(Scene):
         self.play(ex_tree2.animate.set_path_color(b, c, highlight_color))
         
         #erdos winks
-        wink_time = 0.1
+        wink_time = 0.2
         self.play(FadeIn(erdos_img_wink), run_time = wink_time)
         self.play(ex_tree2.animate.change_layout(b_hanging), run_time= wink_time)
         self.play(FadeOut(erdos_img_wink), run_time = wink_time)
@@ -497,7 +497,7 @@ class TreeExamples(Scene):
 
         # bacteria
 
-        bacteria_mid_point = np.array((3, 0, 0))
+        bacteria_mid_point = np.array((3.5, 0, 0))
         vertices, edges, positions, a, b, a2, b2, leaves = parse_bacteria_tree(
             shift=bacteria_mid_point
         )
@@ -543,6 +543,22 @@ class TreeExamples(Scene):
                 {c: base_color, d: base_color}, sc = 1.0/sc
             )
         )
+        self.wait()
+
+
+        #ted se zobrazi number of nodes
+
+        txt_n_file = Tex(r"\# of nodes = 10", color = solarized.BASE00)
+        txt_n_file.move_to(5*LEFT + 2.5*UP)
+        txt_n_bacteria = Tex(r"\# of nodes = 114", color = solarized.BASE00)
+        txt_n_bacteria.move_to(0.1*LEFT + 3*UP)
+
+        self.play(Write(txt_n_file), Write(txt_n_bacteria))
+        self.wait()
+        self.play(Unwrite(txt_n_file), Unwrite(txt_n_bacteria))
+        self.wait()
+
+
         
         # zobrazi se nejdelsi cesta a strom se orotuje
         self.wait(1)
@@ -563,10 +579,10 @@ class TreeExamples(Scene):
         self.wait(1)
 
         txt_diameter = Tex(r"Diameter", color=text_color)
-        txt_diameter.move_to(np.array((3, 1.5, 0)))
+        txt_diameter.move_to(np.array((3.5, 2, 0)))
         txt_21 = Tex(r" = 21", color = text_color)
         txt_21.align_to(txt_diameter, RIGHT)
-        txt_21.move_to(np.array(1, 0, 0))
+        txt_21.move_to(np.array((1, 0, 0)))
         #txt_21.move_to(np.array((3 + txt_diameter.get_end()-txt_diameter.get_start(), 1.5, 0)))
 
         seg_mid = Line(
@@ -599,20 +615,25 @@ class TreeExamples(Scene):
         )
         self.play(Gbacteria.animate.change_layout(bact_hanging_position2), run_time=2)
         self.wait()
-        self.play(Write(txt_21))
+        #self.play(Write(txt_21))
         self.wait()
+
         file_a = "/Documents/ETH/Thesis"
         file_b = "/Downloads"
-
         # nejdelsi cesta ve file tree
-        anim1, anim2 = file_tree.path_animation(file_a, file_b, color=RED, time_per_step=1.0)
+        anim1, anim2 = file_tree.path_animation(file_a, file_b, color=solarized.RED, time_per_step=1.0)
         self.play(anim1)
         self.wait(1)
-        self.play(anim2)
+
+        txt_d_file = Tex(r"Diameter = 4", color = solarized.BASE00)
+        txt_d_file.move_to(4*LEFT + 2.5*UP)
+        self.play(Write(txt_d_file))
+        self.wait()
+        self.play(anim2, Unwrite(txt_d_file))
 
         self.wait(1)
         self.play(
-            FadeOut(Gbacteria), FadeOut(file_tree), FadeOut(txt_diameter), FadeOut(seg), FadeOut(txt_21)
+            FadeOut(Gbacteria), FadeOut(file_tree), FadeOut(txt_diameter), FadeOut(seg)
         )
         self.wait(10)
 
