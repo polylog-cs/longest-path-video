@@ -43,7 +43,6 @@ class PhysicalModel(Scene):
 
         acko = Tex("a", color=solarized.BASE2).scale(0.8).move_to(self.g[va].get_center())
         self.add_foreground_mobjects(acko)
-            
         self.play(self.g[va].animate.scale(scale_factor))
         self.play(Create(acko))
         self.wait()
@@ -55,7 +54,7 @@ class PhysicalModel(Scene):
         bcko = Tex("b", color=solarized.BASE2).scale(0.8).move_to(self.g[vb].get_center())
         self.add_foreground_mobjects(bcko)
         self.play(self.g[vb].animate.scale(scale_factor))
-        self.play(Create(bcko), Uncreate(acko), self.g[va].animate.scale(1.0/scale_factor))    
+        self.play(Create(bcko), Uncreate(acko), self.g[va].animate.scale(1.0/scale_factor))
         self.wait()
 
         b_position = self.g.hanging_position(vb, vb, shift=2*UP+right_shift*RIGHT)
@@ -124,7 +123,7 @@ class Triangle(Scene):
         flash_triangle()
 
         self.play(
-            self.g.animate.change_layout("kamada_kawai", layout_scale=1.5).scale(2)
+            self.g.animate.change_layout("kamada_kawai", layout_scale=3)
         )
         self.wait(1)
 
@@ -135,7 +134,7 @@ class Triangle(Scene):
         self.wait(1)
 
         self.play(
-            self.g.animate.scale(0.5).change_layout(
+            self.g.animate.change_layout(
                 self.g.hanging_position(b2, c2, shift=2 * UP, scale=1.0)
             )
         )
@@ -155,12 +154,18 @@ class Triangle(Scene):
         # animace, zvýraznit třetí vrchol horní cesty a pak vzdálenost k levému
         #   kraji a ke spodku podstromu (vzdálenost je stejná)
         b3, c3 = 64, 80
-        v_layers = [[6], [60, 7], [61, 8], [64, 9]]
-        e_layers = [[(6, 60), (6, 7)], [(60, 61), (7, 8)], [(61, 64), (8, 9)], []]
-        anim1, anim2 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers), custom_angles = {64: (-70, 1.5), 61: (180, 1), 9: (90, 1)})
-        self.play(anim1)
+        v_layers = [[6], [7], [8], [9]]
+        e_layers = [[(6, 7)], [(7, 8)], [(8, 9)], []]
+        anim11, anim12 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers), custom_angles = {64: (-70, 1.5), 61: (180, 1), 9: (90, 1)})
+        self.play(anim11)
+        self.wait()
+
+        v_layers = [[], [60], [61], [64]]
+        e_layers = [[(6, 60)], [(60, 61)], [(61, 64)], []]
+        anim21, anim22 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers), custom_angles = {64: (-70, 1.5), 61: (180, 1), 9: (90, 1)})
+        self.play(anim21)
         self.wait(1)
-        self.play(anim2)
+        self.play(anim12, anim22)
         self.wait(1)
 
         self.play(self.g.animate.set_colors_all())
@@ -249,9 +254,9 @@ class Proof(Scene):
 
         self.wait()
         acko = Tex("a", color=solarized.BASE2).move_to(self.g[va].get_center())
-        self.add_foreground_mobjects(acko)
-            
+    
         self.play(self.g[va].animate.scale(scale_factor))
+        self.add_foreground_mobjects(acko)
         self.play(Create(acko))
         
         # So, recall that we start by finding some node farthest away from a.
@@ -290,15 +295,15 @@ class Proof(Scene):
             self.add(line1, line2)
 
             if it == 1:
+                bcko = Tex("b", color=solarized.BASE2).move_to(self.g[v].get_center())
+                self.add_foreground_mobjects(bcko)
                 self.play(
                     self.g[v].animate.scale(scale_factor),
                     self.g[va].animate.scale(1 / scale_factor),
-                    Uncreate(acko)
+                    Uncreate(acko),
+                    Create(bcko)
                 )
-                bcko = Tex("b", color=solarized.BASE2).move_to(self.g[v].get_center())
-                self.add_foreground_mobjects(bcko)
-        
-            
+
             self.play(self.g.animate.set_colors_all(solarized.BASE00))
 
             v_layers, e_layers, _ = self.g.bfs(v)
@@ -619,7 +624,7 @@ class Outro(Scene):
         even_paths = [(1, 5), (32, 34), (5, 20), (33, 1)]
         odd_paths = [(65, 21), (56, 46), (10, 64), (44, 80)]
         for i in range(len(even_paths)):
-            t = 0.1
+            t = 0.2
             anim_l1, anim_l2 = self.g.path_animation(
                 even_paths[i][0],
                 even_paths[i][1],

@@ -81,7 +81,7 @@ class TheBook(Scene):
 
         # nejdriv vnejsi ctverce
         outer_shift = np.array((0.28 * book_height_large, 0.0 * book_height_large, 0))
-        outer_color = GREEN
+        outer_color = solarized.GREEN
         outer_square = Square(side_length=(a + b), color=outer_color)
         outer_square.move_to(np.array(offset) - outer_shift)
 
@@ -91,7 +91,7 @@ class TheBook(Scene):
         # self.wait(1)
 
         # pak vnitrni
-        inner_color = BLUE
+        inner_color = solarized.BLUE
         inner_square = Square(side_length=c, color=inner_color)
         inner_square.set_fill(inner_color, opacity=1.0)
         inner_square.rotate(math.asin(a / c))
