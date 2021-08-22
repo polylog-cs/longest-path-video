@@ -91,11 +91,13 @@ class Triangle(Scene):
             vertex_config={"color": solarized.BASE00},
             edge_config={"color": solarized.BASE00},
             #labels=True,
-        )
+        ).scale(2)
         hanging = self.g.hanging_position(b1, c1, shift=2 * UP, scale=1.0)
         self.g.change_layout(hanging)
 
         self.play(DrawBorderThenFill(self.g))
+        self.wait()
+        return
         self.play(self.g.animate.set_path_color(b1, c1, solarized.RED))
         self.wait()
 
