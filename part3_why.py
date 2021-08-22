@@ -718,11 +718,11 @@ class Outro(Scene):
         self.wait()
 
         sub_scale = 0.95
-        txt_subscribe1 = Tex(r"If you liked the video, consider subscribing to our new channel. ", color = solarized.BASE00).scale(sub_scale)
+        txt_subscribe1 = Tex(r"If you liked the video, consider subscribing to our channel. ", color = solarized.BASE00).scale(sub_scale)
 
         txt_subscribe2 = Tex(r"We’d like to make more videos explaining cool algorithms", color = solarized.BASE00).scale(sub_scale)
 
-        txt_subscribe3= Tex(r"and for that it is good to know if you are interested too. ", color = solarized.BASE00).scale(sub_scale)
+        txt_subscribe3= Tex(r"and for that it is good to know that you are interested too. ", color = solarized.BASE00).scale(sub_scale)
 
 
         txt_subscribe = Group(txt_subscribe1, txt_subscribe2, txt_subscribe3).arrange(DOWN)

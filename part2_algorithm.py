@@ -37,7 +37,7 @@ class Naive(OScene):
         )
         self.wait()
 
-        txt = Tex(r"Breadth First Search", color=solarized.BASE00)
+        txt = Tex(r"Breadth-First Search", color=solarized.BASE00)
         txt.shift(4 * RIGHT + 3 * UP)
 
         anim1, high_anim, anim2 = main_g.bfs_animation(
@@ -193,8 +193,8 @@ class Naive(OScene):
         self.play(Write(txt3), Create(br))
         self.wait()
 
-        txt_mil1 = Tex(r"If $n = 1\,000\,000$,", color=solarized.BASE00)
-        txt_mil2 = Tex(r"then $n^2 = 1\,000\,000\,000\,000$", color=solarized.BASE00)
+        txt_mil1 = Tex(r"If $n = 1,000,000$", color=solarized.BASE00)
+        txt_mil2 = Tex(r"then $n^2 = 1,000,000,000,000$", color=solarized.BASE00)
 
         txt_mil = Group(txt_mil1, txt_mil2).arrange(DOWN)
         txt_mil1.align_to(txt_mil, RIGHT)
@@ -204,6 +204,7 @@ class Naive(OScene):
         self.wait()
         self.play(Write(txt_mil2))
         self.wait()
+
         self.play(
             Unwrite(txt_mil1),
             Unwrite(txt_mil2),
