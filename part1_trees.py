@@ -8,9 +8,30 @@ import solarized
 import tree_data
 from util import *
 
+class ChatBubble(VMobject):
+    def __init__(self, text, answer_bubble = False, border = 0.3, **kwargs):
+        VMobject.__init__(self, **kwargs)
+        self.answer_bubble = answer_bubble
+
+        self.bubble = SVGMobject(file_name = "img/Chat_bubble.svg").scale(0.02)
+        self.bubble.set_fill(BLACK, opacity = 0.9)
+
+        if answer_bubble: self.bubble.set_stroke(YELLOW)
+        else: self.bubble.set_stroke(BLUE)
+
+        self.text = Text(text)
+        self.tip_h = 10
+        self.text.move_to(
+            self.bubble.get_corner(LEFT+DOWN) + np.array([border,self.tip_h+border,0]), 
+            aligned_edge = LEFT+DOWN
+            )
+        size_shift = self.text.get_corner(UP+RIGHT) - self.bubble.get_corner(UP+RIGHT) + border
+
+        return Group(self.bubble, self.text)
 
 class TheBook(Scene):
     def construct(self):
+
         text_color = solarized.BASE00
         erdos_img = ImageMobject("img/erdos.jpg")  # wiki
         erdos_img.height = 4
@@ -164,10 +185,19 @@ class TheBook(Scene):
         # erdos mluvi, knizka zaleze
         ########################################################
 
-        straight = Tex(r"Straight from the Book!", color=text_color)
-        straight.shift(3 * UP)
 
-        self.play(Create(straight))
+        bubble = SVGMobject(file_name = "img/Chat_bubble.svg").stretch(1.1, 0).stretch(0.8, 1)
+        bubble.set_fill(solarized.BASE1)
+
+        straight = Tex(r"Straight from the Book!", color=text_color)
+
+        bublina = Group(bubble, straight)
+        straight.align_to(bubble, LEFT)
+        straight.align_to(bubble, UP)
+        straight.shift(0.4*DOWN+0.4*RIGHT)
+        bublina.shift(3 * UP+0.4*LEFT)
+
+        self.play(Create(bubble), Write(straight))
         # self.play(FadeOut(erdos), FadeOut(straight))
 
         self.play(
@@ -187,6 +217,7 @@ class TheBook(Scene):
         book2 = OSVGMobject("img/open-book.svg", height=book_height_small)
         # http://www.clker.com/cliparts/I/O/x/x/4/8/open-book.svg
         book2.move_to(offset2_start)
+
         self.play(FadeIn(book2))
 
         offset2 = offset + np.array((0, 0, 0))
@@ -214,7 +245,7 @@ class TheBook(Scene):
             edge_config={"color": base_color}
             # labels=True
         )
-
+            
         # self.add_foreground_mobjects(ex_tree)
         offset2_tree_start = offset2 + np.array((-0.45 * book_height_large, 0.3, 0))
         ex_tree.move_to(offset2_tree_start)
@@ -243,6 +274,7 @@ class TheBook(Scene):
         self.play(ex_tree.animate.set_path_color(b, b, highlight_color))
 
         ex_tree2 = ex_tree.copy()
+            
         b_hanging = ex_tree.hanging_position(
             b,
             b,
@@ -276,7 +308,7 @@ class TheBook(Scene):
         # everything fades out, then names are displayed
         ################################################################
 
-        self.play(FadeOut(Group(math_book, book2, erdos, ex_tree, ex_tree2, straight)))
+        self.play(FadeOut(Group(math_book, book2, erdos, ex_tree, ex_tree2, bubble, straight)))
 
         """            
         self.play(

@@ -20,8 +20,7 @@ uvození algoritmu: číslíčka by měla zůstat o trochu déle
 
 
 VR
-sjednotit font, barvy
-animace k fyzickemu modelu
+sjednotit font (done), barvy -- napr pythagorovku
 
 
 nahrat svoji cast
@@ -29,6 +28,8 @@ nahrat svoji cast
 IN the picture
 int he middle of ANY longest path
 přidat našim jménům diakritiku
+
+místo "I think" dát "for me"
 
 
 

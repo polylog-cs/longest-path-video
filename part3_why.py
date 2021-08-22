@@ -58,11 +58,11 @@ class PhysicalModel(Scene):
         self.play(Create(bcko), Uncreate(acko), self.g[va].animate.scale(1.0/scale_factor))    
         self.wait()
 
-        b_position = self.g.hanging_position(vb, vb, shift=3*UP+right_shift*RIGHT)
+        b_position = self.g.hanging_position(vb, vb, shift=2*UP+right_shift*RIGHT)
         self.play(self.g.animate.change_layout(b_position), bcko.animate.move_to(b_position[vb]))
         self.wait()
 
-        bc_position = self.g.hanging_position(vb, vc, shift=3*UP+right_shift*RIGHT)
+        bc_position = self.g.hanging_position(vb, vc, shift=1*UP+right_shift*RIGHT)
         self.play(self.g[vc].animate.scale(scale_factor))
         self.play(Uncreate(bcko))
         self.wait()
@@ -235,7 +235,7 @@ class Proof(Scene):
             },
             edge_config={"color": solarized.BASE00},
             # labels=True,
-            label_class=Text,
+            #label_class=Text,
         )
 
         hanging = self.g.hanging_position(vb, vc, shift=2 * UP, scale=1.0)
@@ -646,9 +646,6 @@ class Outro(Scene):
             Uncreate(rec2),
         )
 
-        txt_fs = Tex(r"The actual longest path in Václav's filesystem", color = base_color)
-        txt_fs.shift(2*UP)
-        self.play(Write(txt_fs))
 
         self.wait()
         self.play(Unwrite(txt_fs))
@@ -684,6 +681,19 @@ class Outro(Scene):
         self.wait()
 
         self.play(Write(txt_th4), Write(txt_th5))
+
+        self.wait()
+
+        txt_fs1 = Tex(r"... and since you were probably asking yourself:", color = base_color)
+        txt_fs2 = Tex(r"The longest path on Vaclav's filesystem is between", color = base_color)
+        txt_fs3 = Tex(r"/Users/vaclav/Library/Application Support/Ableton/Live 10.1.30/_autoupdates/pending_update/deltas/d0/updated/Contents/App-Resources/Max/Max.app/Contents/Resources/C74/packages/Node For Max/source/bin/npm/node_modules/term-size/vendor/macos",
+         color = base_color).scale(0.5)
+        txt_fs4 = Tex(r"and", color = base_color)
+        txt_fs5 = Tex(r"/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/bundler/vendor/net-http-persistent/lib/net/http/persistent", 
+            color = base_color).scale(0.5)
+
+        txt_fs.shift(2*UP)
+        self.play(Write(txt_fs))
 
         self.wait()
         self.play(Unwrite(txt_th1), Unwrite(txt_th21), FadeOut(img_3b1b), Unwrite(txt_th22), FadeOut(img_leios), 
