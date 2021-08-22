@@ -27,9 +27,10 @@ VR
 - dvakrát je tam "in fact it took .. seconds to find out diameter of my file system", to druhé bych klidně vymazal
 
 
-- změnit po bakteriích barvu na červenou
-LOW
-
+VR
+- založit kanál
+- thumbnail
+- video description
 
 
 VIDEO DESCRIPTION

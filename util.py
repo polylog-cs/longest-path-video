@@ -258,7 +258,6 @@ class Tree(Graph):
             time_per_step = time_per_step, \
             override_layers = (vertices, edges), \
             color = color, \
-            base_color = base_color,\
             annotations = False,\
             blinking = False, \
             rect = rect)
@@ -273,11 +272,12 @@ class Tree(Graph):
         annotations_scale = 0.75,
         blinking=True,
         rect = None,
+        color = solarized.MAGENTA, 
         final_highlight = None,
         custom_angles = None,
         distance_offset=0,
     ):
-        color = solarized.MAGENTA
+        
 
         if override_layers is None:
             v_layers, e_layers, _ = self.bfs(start)
