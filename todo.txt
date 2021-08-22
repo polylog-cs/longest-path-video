@@ -25,6 +25,9 @@ VR
 - když se vysvětlujé poprvé bfs tak modrý highlight pětek není moc vidět
 - skip to the end ... pak je tam znova "so"
 - dvakrát je tam "in fact it took .. seconds to find out diameter of my file system", to druhé bych klidně vymazal
+
+
+- změnit po bakteriích barvu na červenou
 LOW
 
 

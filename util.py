@@ -257,6 +257,8 @@ class Tree(Graph):
         return self.bfs_animation(start, \
             time_per_step = time_per_step, \
             override_layers = (vertices, edges), \
+            color = color, \
+            base_color = base_color,\
             annotations = False,\
             blinking = False, \
             rect = rect)
