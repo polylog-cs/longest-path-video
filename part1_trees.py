@@ -343,6 +343,11 @@ class TheBook(Scene):
 
 class TreeIntro(OScene):
     def construct(self):
+        va1 = 34
+        va2 = 7
+        vc1 = 35 # 35
+        vd1 = 20
+        root = 33
         base_color = solarized.BASE00
         node_radius = 0.2
 
@@ -360,7 +365,7 @@ class TreeIntro(OScene):
             vertices,
             edges,
             layout="kamada_kawai",
-            labels=False,
+            #labels=True,
             vertex_config={"color": solarized.BASE00},
             edge_config={"color": solarized.BASE00},
             # Passed to:
@@ -381,7 +386,7 @@ class TreeIntro(OScene):
         self.wait(1)
 
         vec = tree.get_center() - tree.get_start()
-        delta = positions[0] - tree.get_center() - np.array([0.0, 0.8 * vec[1], 0.0])
+        delta = positions[0] - tree.get_center() - np.array([0.0, 0 * 0.8 * vec[1], 0.0])-0.1*LEFT-0.1*DOWN
         # (-2.5, -6.0, 0.0)
         for k, v in positions.items():
             v -= delta
@@ -395,12 +400,12 @@ class TreeIntro(OScene):
         # ted se prida hrana
 
         extra_edge = Line(
-            self.T[6].get_center(), self.T[22].get_center(), color=solarized.RED
+            self.T[vc1].get_center(), self.T[vd1].get_center(), color=solarized.RED
         )
 
         self.play(
             self.T.animate.set_colors_and_enlarge(
-                {6: solarized.RED, 22: solarized.RED}, sc=2
+                {vc1: solarized.RED, vd1: solarized.RED}, sc=2
             )
         )
         self.wait(1)
@@ -409,7 +414,7 @@ class TreeIntro(OScene):
 
         self.wait()
         self.wait(1)
-        anim1, anim2 = self.T.path_animation(6, 22, time_per_step=0.3)
+        anim1, anim2 = self.T.path_animation(vc1, vd1, time_per_step=0.3)
         self.play(anim1)
         self.wait()
         self.play(anim2)
@@ -419,7 +424,7 @@ class TreeIntro(OScene):
         self.play(
             Uncreate(extra_edge),
             self.T.animate.set_colors_and_enlarge(
-                {6: solarized.BASE00, 22: solarized.BASE00}, sc=1.0 / 2
+                {vc1: solarized.BASE00, vd1: solarized.BASE00}, sc=1.0 / 2
             ),
         )
         self.wait(1)
@@ -427,19 +432,19 @@ class TreeIntro(OScene):
         # ted se odeberou vrcholy
         self.play(
             self.T.animate.set_colors_and_enlarge(
-                vertex_colors={1: solarized.BLUE, 8: solarized.BLUE}, sc=2
+                vertex_colors={va1: solarized.BLUE, va2: solarized.BLUE}, sc=2
             )
         )
         self.wait(1)
-        self.play(self.T.animate.remove_edges((1, 8)))
+        self.play(self.T.animate.remove_edges((va1, va2)))
 
         self.wait(1)
         self.play(
             self.T.animate.set_colors_and_enlarge(
-                vertex_colors={1: solarized.BASE00, 8: solarized.BASE00}, sc=0.5
+                vertex_colors={va1: solarized.BASE00, va2: solarized.BASE00}, sc=0.5
             )
         )
-
+        self.wait(1)
         self.play(FadeOut(self.T))
         self.wait(1)
 

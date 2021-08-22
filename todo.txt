@@ -19,20 +19,12 @@ uvození algoritmu: číslíčka by měla zůstat o trochu déle
 
 
 VR
-sjednotit font (done), barvy -- napr pythagorovku
 
-
-nahrat svoji cast
-
-IN the picture
-int he middle of ANY longest path
-přidat našim jménům diakritiku
-
-místo "I think" dát "for me"
-
-
-
-
+- "and now for the proof of the algorithm itself" -- dá se vyškrtnout "the proof of"
+- and since this argument works for any tree we could have started with, v "důkazu manipulujeme s left a right tak trochu neobecně"
+- když se vysvětlujé poprvé bfs tak modrý highlight pětek není moc vidět
+- skip to the end ... pak je tam znova "so"
+- dvakrát je tam "in fact it took .. seconds to find out diameter of my file system", to druhé bych klidně vymazal
 LOW
 
 

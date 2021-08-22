@@ -47,6 +47,7 @@ class PhysicalModel(Scene):
 
         acko = Tex("a", color=solarized.BASE2).scale(0.8).move_to(self.g[va].get_center())
         self.add_foreground_mobjects(acko)
+            
         self.play(self.g[va].animate.scale(scale_factor))
         self.play(Create(acko))
         self.wait()
@@ -58,7 +59,7 @@ class PhysicalModel(Scene):
         bcko = Tex("b", color=solarized.BASE2).scale(0.8).move_to(self.g[vb].get_center())
         self.add_foreground_mobjects(bcko)
         self.play(self.g[vb].animate.scale(scale_factor))
-        self.play(Create(bcko), Uncreate(acko), self.g[va].animate.scale(1.0/scale_factor))
+        self.play(Create(bcko), Uncreate(acko), self.g[va].animate.scale(1.0/scale_factor))    
         self.wait()
 
         b_position = self.g.hanging_position(vb, vb, shift=2*UP+right_shift*RIGHT)
@@ -127,7 +128,7 @@ class Triangle(Scene):
         flash_triangle()
 
         self.play(
-            self.g.animate.change_layout("kamada_kawai", layout_scale=3)
+            self.g.animate.change_layout("kamada_kawai", layout_scale=1.5).scale(2)
         )
         self.wait(1)
 
@@ -138,18 +139,10 @@ class Triangle(Scene):
         self.wait(1)
 
         self.play(
-            self.g.animate.change_layout(
+            self.g.animate.scale(0.5).change_layout(
                 self.g.hanging_position(b2, c2, shift=2 * UP, scale=1.0)
             )
         )
-
-        self.wait()
-        br = Brace(self.g, UP, color = solarized.BASE00)
-        br.shift(0.3 * UP)
-        txt =  Tex("A longest path", color = solarized.BASE00)
-        txt.align_to(br, UP)
-        txt.shift(0.5*UP)
-        self.play(Create(br), Write(txt))
 
         self.wait(1)
         self.play(self.g.animate.set_colors_all())
@@ -166,18 +159,12 @@ class Triangle(Scene):
         # animace, zvýraznit třetí vrchol horní cesty a pak vzdálenost k levému
         #   kraji a ke spodku podstromu (vzdálenost je stejná)
         b3, c3 = 64, 80
-        v_layers = [[6], [7], [8], [9]]
-        e_layers = [[(6, 7)], [(7, 8)], [(8, 9)], []]
-        anim11, anim12 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers), custom_angles = {64: (-70, 1.5), 61: (180, 1), 9: (90, 1)})
-        self.play(anim11)
-        self.wait()
-
-        v_layers = [[], [60], [61], [64]]
-        e_layers = [[(6, 60)], [(60, 61)], [(61, 64)], []]
-        anim21, anim22 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers), custom_angles = {64: (-70, 1.5), 61: (180, 1), 9: (90, 1)})
-        self.play(anim21)
+        v_layers = [[6], [60, 7], [61, 8], [64, 9]]
+        e_layers = [[(6, 60), (6, 7)], [(60, 61), (7, 8)], [(61, 64), (8, 9)], []]
+        anim1, anim2 = self.g.bfs_animation(6, override_layers=(v_layers, e_layers), custom_angles = {64: (-70, 1.5), 61: (180, 1), 9: (90, 1)})
+        self.play(anim1)
         self.wait(1)
-        self.play(anim12, anim22)
+        self.play(anim2)
         self.wait(1)
 
         self.play(self.g.animate.set_colors_all())
@@ -241,43 +228,34 @@ class Proof(Scene):
     def construct(self):
         va, vb, vc = 45, 21, 9
 
-        b1, c1 = 64, 0
-
         self.g = Tree(
             tree_data.example_vertices,
             tree_data.example_edges,
             layout="kamada_kawai",
             layout_scale=3.5,
-            vertex_config={"color": solarized.BASE00},
+            vertex_config={
+                # "radius": 0.2,
+                "color": solarized.BASE00
+            },
             edge_config={"color": solarized.BASE00},
-            #labels=True,
+            # labels=True,
+            #label_class=Text,
         )
+
         hanging = self.g.hanging_position(vb, vc, shift=2 * UP, scale=1.0)
-        self.g.change_layout(
-                hanging
-            )
+        self.g.change_layout(hanging)
 
-        ###################wtf kdyz to adduju tak to nefunguje
-        #self.add(self.g)
-        self.play(DrawBorderThenFill(self.g))
-
-        br = Brace(self.g, UP, color = solarized.BASE00)
-        br.shift(0.3 * UP)
-        txt =  Tex("A longest path", color = solarized.BASE00)
-        txt.align_to(br, UP)
-        txt.shift(0.5*UP)
-        self.play(Create(br), Write(txt))
-        
-        self.wait()
+        self.add(self.g)
+        # self.play(DrawBorderThenFill(self.g))
         self.wait()
 
         scale_factor = 3.0
 
         self.wait()
         acko = Tex("a", color=solarized.BASE2).move_to(self.g[va].get_center())
-    
-        self.play(self.g[va].animate.scale(scale_factor))
         self.add_foreground_mobjects(acko)
+            
+        self.play(self.g[va].animate.scale(scale_factor))
         self.play(Create(acko))
         
         # So, recall that we start by finding some node farthest away from a.
@@ -316,15 +294,15 @@ class Proof(Scene):
             self.add(line1, line2)
 
             if it == 1:
-                bcko = Tex("b", color=solarized.BASE2).move_to(self.g[v].get_center())
-                self.add_foreground_mobjects(bcko)
                 self.play(
                     self.g[v].animate.scale(scale_factor),
                     self.g[va].animate.scale(1 / scale_factor),
-                    Uncreate(acko),
-                    Create(bcko)
+                    Uncreate(acko)
                 )
-
+                bcko = Tex("b", color=solarized.BASE2).move_to(self.g[v].get_center())
+                self.add_foreground_mobjects(bcko)
+        
+            
             self.play(self.g.animate.set_colors_all(solarized.BASE00))
 
             v_layers, e_layers, _ = self.g.bfs(v)
@@ -408,13 +386,7 @@ class Proof(Scene):
         self.play(self.g.animate.set_colors_all(solarized.BASE00))
 
         self.play(self.g.animate.set_path_color(65, 10, solarized.RED))
-        self.wait()
-
-        hanging2 =self.g.hanging_position(10, 65, shift=2 * UP, scale=1.0) 
-        self.play(self.g.animate.change_layout(hanging2))
-        self.wait()
-        self.play(self.g.animate.change_layout(hanging))
-        self.wait()
+        self.wait(2)
 
         self.play(FadeOut(self.g), Uncreate(bcko))
         self.wait()
@@ -651,7 +623,7 @@ class Outro(Scene):
         even_paths = [(1, 5), (32, 34), (5, 20), (33, 1)]
         odd_paths = [(65, 21), (56, 46), (10, 64), (44, 80)]
         for i in range(len(even_paths)):
-            t = 0.2
+            t = 0.1
             anim_l1, anim_l2 = self.g.path_animation(
                 even_paths[i][0],
                 even_paths[i][1],
@@ -679,6 +651,8 @@ class Outro(Scene):
         )
 
 
+        self.wait()
+        self.play(Unwrite(txt_fs))
         self.wait()
         txt_th1 = Tex(r"Big thanks to: ", color = base_color)
         txt_th21 = Tex(r"3blue1brown", color = base_color)
@@ -713,29 +687,7 @@ class Outro(Scene):
         self.play(Write(txt_th4), Write(txt_th5))
 
         self.wait()
-        self.play(Unwrite(txt_th1), Unwrite(txt_th21), FadeOut(img_3b1b), Unwrite(txt_th22), FadeOut(img_leios), 
-            Unwrite(txt_th3), Unwrite(txt_th4), Unwrite(txt_th5))
-        self.wait()
 
-        sub_scale = 0.95
-        txt_subscribe1 = Tex(r"If you liked the video, consider subscribing to our new channel. ", color = solarized.BASE00).scale(sub_scale)
-
-        txt_subscribe2 = Tex(r"We’d like to make more videos explaining cool algorithms", color = solarized.BASE00).scale(sub_scale)
-
-        txt_subscribe3= Tex(r"and for that it is good to know if you are interested too. ", color = solarized.BASE00).scale(sub_scale)
-
-
-        txt_subscribe = Group(txt_subscribe1, txt_subscribe2, txt_subscribe3).arrange(DOWN)
-
-        self.play(Write(txt_subscribe1))
-        self.wait(0.5)
-        self.play(Write(txt_subscribe2))
-        self.wait(0.5)
-        self.play(Write(txt_subscribe3))
-        self.wait(0.5)
-
-        '''
-        
         txt_fs1 = Tex(r"... and since you were probably asking yourself:", color = base_color)
         txt_fs2 = Tex(r"The longest path on Vaclav's filesystem is between", color = base_color)
         txt_fs3 = Tex(r"/Users/vaclav/Library/Application Support/Ableton/Live 10.1.30/_autoupdates/pending_update/deltas/d0/updated/Contents/App-Resources/Max/Max.app/Contents/Resources/C74/packages/Node For Max/source/bin/npm/node_modules/term-size/vendor/macos",
@@ -746,5 +698,8 @@ class Outro(Scene):
 
         txt_fs.shift(2*UP)
         self.play(Write(txt_fs))
-        '''
-        self.wait(3)
+
+        self.wait()
+        self.play(Unwrite(txt_th1), Unwrite(txt_th21), FadeOut(img_3b1b), Unwrite(txt_th22), FadeOut(img_leios), 
+            Unwrite(txt_th3), Unwrite(txt_th4), Unwrite(txt_th5))
+        self.wait()
