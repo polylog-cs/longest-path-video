@@ -9,12 +9,16 @@ class Misof(OScene):
     def construct(self):
         self.outline(3)
 
-        cover = ImageMobject("img/forisek_steinova.jpg").scale(1.5)
-        text = Tex(r"Michal Forišek\\Monika Steinová", color=solarized.BASE00)
+        cover = ImageMobject("img/forisek_steinova.jpg").scale(0.7)
+        text1 = Tex(r"Michal Forišek", color=solarized.BASE00)
+        text2 = Tex(r"Monika Steinová", color=solarized.BASE00)
+        text = Group(text1, text2).arrange(DOWN)
+        text1.align_to(text, LEFT)
+        text2.align_to(text, LEFT)
         cover.shift(3 * LEFT)
         text.shift(2 * RIGHT)
         self.play(FadeIn(cover))
-        self.play(Create(text))
+        self.play(Write(text1), Write(text2))
         self.wait(1)
 
 
@@ -500,7 +504,7 @@ class Outro(Scene):
         b = 10
         c = 20
 
-        self.play(ex_tree.animate.set_path_color(a, a, GREEN))
+        self.play(ex_tree.animate.set_path_color(a, a, solarized.GREEN))
         a_hanging = ex_tree.hanging_position(
             a,
             a,

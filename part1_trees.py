@@ -8,34 +8,13 @@ import solarized
 import tree_data
 from util import *
 
-class ChatBubble(VMobject):
-    def __init__(self, text, answer_bubble = False, border = 0.3, **kwargs):
-        VMobject.__init__(self, **kwargs)
-        self.answer_bubble = answer_bubble
-
-        self.bubble = SVGMobject(file_name = "img/Chat_bubble.svg").scale(0.02)
-        self.bubble.set_fill(BLACK, opacity = 0.9)
-
-        if answer_bubble: self.bubble.set_stroke(YELLOW)
-        else: self.bubble.set_stroke(BLUE)
-
-        self.text = Text(text)
-        self.tip_h = 10
-        self.text.move_to(
-            self.bubble.get_corner(LEFT+DOWN) + np.array([border,self.tip_h+border,0]), 
-            aligned_edge = LEFT+DOWN
-            )
-        size_shift = self.text.get_corner(UP+RIGHT) - self.bubble.get_corner(UP+RIGHT) + border
-
-        return Group(self.bubble, self.text)
-
 class TheBook(Scene):
     def construct(self):
 
         text_color = solarized.BASE00
         erdos_img = ImageMobject("img/erdos.jpg")  # wiki
         erdos_img.height = 4
-        erdos_desc = Tex(r"Paul Erd\"{o}s", color=text_color)
+        erdos_desc = Tex(r"Paul Erd\H{o}s", color=text_color)
         erdos = Group(erdos_img, erdos_desc).arrange(DOWN)
 
         erdos.shift(5 * LEFT)
@@ -81,7 +60,7 @@ class TheBook(Scene):
 
         # nejdriv vnejsi ctverce
         outer_shift = np.array((0.28 * book_height_large, 0.0 * book_height_large, 0))
-        outer_color = GREEN
+        outer_color = solarized.GREEN
         outer_square = Square(side_length=(a + b), color=outer_color)
         outer_square.move_to(np.array(offset) - outer_shift)
 
@@ -91,7 +70,7 @@ class TheBook(Scene):
         # self.wait(1)
 
         # pak vnitrni
-        inner_color = BLUE
+        inner_color = solarized.BLUE
         inner_square = Square(side_length=c, color=inner_color)
         inner_square.set_fill(inner_color, opacity=1.0)
         inner_square.rotate(math.asin(a / c))
@@ -103,7 +82,7 @@ class TheBook(Scene):
         # self.wait(1)
 
         # pak trojuhelniky
-        tr_color = RED
+        tr_color = solarized.RED
 
         pointedness = 0.00
 
@@ -189,7 +168,7 @@ class TheBook(Scene):
         bubble = SVGMobject(file_name = "img/Chat_bubble.svg").stretch(1.1, 0).stretch(0.8, 1)
         bubble.set_fill(solarized.BASE1)
 
-        straight = Tex(r"Straight from the Book!", color=text_color)
+        straight = Tex(r"Straight from the Book!", color=solarized.BASE02)
 
         bublina = Group(bubble, straight)
         straight.align_to(bubble, LEFT)
@@ -233,7 +212,7 @@ class TheBook(Scene):
         edge_scale = 0.5
         node_radius = 0.1
         base_color = solarized.BASE00
-        highlight_color = RED
+        highlight_color = solarized.RED
 
         ex_tree = Tree(
             tree_data.misof_example_vertices,
@@ -259,7 +238,7 @@ class TheBook(Scene):
         b = 10
         c = 20
 
-        self.play(ex_tree.animate.set_path_color(a, a, GREEN))
+        self.play(ex_tree.animate.set_path_color(a, a, solarized.GREEN))
         a_hanging = ex_tree.hanging_position(
             a,
             a,
@@ -292,9 +271,14 @@ class TheBook(Scene):
         # self.play(ex_tree2.animate.set_path_color(c, c, highlight_color))
         self.play(ex_tree2.animate.set_path_color(b, c, highlight_color))
 
+        ###########################################
         # erdos winks
-        wink_time = 0.2
-        self.play(FadeIn(erdos_img_wink), run_time=wink_time)
+        ###########################################
+
+        wink_time = 0.3
+
+        #zakomentovany flash
+        #self.play(FadeIn(erdos_img_wink), Flash(5.2*LEFT + 2.1*UP), run_time=wink_time)
         self.play(ex_tree2.animate.change_layout(b_hanging), run_time=wink_time)
         self.play(FadeOut(erdos_img_wink), run_time=wink_time)
 
@@ -327,7 +311,7 @@ class TheBook(Scene):
         volhejn.align_to(names, RIGHT)
         rozhon.align_to(names, RIGHT)
 
-        some_highlight_color = RED
+        some_highlight_color = solarized.RED
         some_challenge = MarkupText(
             f'<span fgcolor="{some_highlight_color}">S</span>ummer <span fgcolor="{some_highlight_color}">o</span>f <span fgcolor="{some_highlight_color}">M</span>ath<span fgcolor="{some_highlight_color}"> E</span>xposition <span fgcolor="{some_highlight_color}">1</span>',
             color=text_color,
@@ -555,7 +539,7 @@ class TreeExamples(Scene):
             shift=bacteria_mid_point
         )
         base_color = solarized.BASE00
-        bac_highlight_color = RED
+        bac_highlight_color = solarized.RED
         node_radius = 0.05
         # labels = dict((v, Text(str(v), fill_color=BLACK, size=0.15)) for v in vertices)
         Gbacteria = Tree(

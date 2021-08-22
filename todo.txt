@@ -7,7 +7,6 @@ HIGH
 VV
 	bfs
 	- upravit voiceover po tom, co dojede naivní algoritmus
-	- písmeka a,b,c v bfs
 
 změny v scénáři
 	- po ukončení algoritmu přidat krátkou větu typu "and this is the end of the algorithm"
